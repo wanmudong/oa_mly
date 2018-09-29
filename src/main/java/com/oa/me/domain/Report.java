@@ -8,11 +8,11 @@ public class Report {
     /**
      * 自增，PrimaryKey
      */
-    private String id;
+    private int id;
     /**
      * 汇报者ID
      */
-    private String  uid;
+    private int  uid;
     /**
      * 工作起始时间
      */
@@ -36,7 +36,7 @@ public class Report {
     /**
      * 部长评分
      */
-    private String rate;
+    private float rate;
     /**
      * 汇报内容
      */
@@ -50,20 +50,45 @@ public class Report {
      */
     private String comment;
 
-    public String getId() {
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public String getUid() {
+//        return uid;
+//    }
+//
+//    public void setUid(String uid) {
+//        this.uid = uid;
+//    }
+
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getUid() {
+    public int getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(int uid) {
         this.uid = uid;
+    }
+
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
     }
 
     public String getStart_date() {
@@ -106,13 +131,13 @@ public class Report {
         this.time_report = time_report;
     }
 
-    public String getRate() {
-        return rate;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
+//    public String getRate() {
+//        return rate;
+//    }
+//
+//    public void setRate(String rate) {
+//        this.rate = rate;
+//    }
 
     public String getContent() {
         return content;

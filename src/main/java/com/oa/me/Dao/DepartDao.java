@@ -11,13 +11,22 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface DepartDao {
 
+    @Select("select dict_id from oa_dict_depart where dict_item_name=#{depart}")
+    String getIdByName(Recruit recruit);
+    /**
+     * 用部门代号获取部门名称
+     * @param depart
+     * @return
+     */
     @Select("select dict_item_name from oa_dict_depart where dict_id=#{depart}")
     String getNameById(@Param("depart") int depart);
 
 
+    /**
+     * 用部门名称获取部门代号
+     * @param depart
+     * @return
+     */
     @Select("select dict_id from oa_dict_depart where dict_item_name=#{depart}")
-    String getIdByName(Recruit recruit);
-
-    @Select("select dict_id from oa_dict_depart where dict_item_name=#{depart}")
-    String getIdByName(@Param("depart") String depart);
+    Integer getIdByName(@Param("depart") String depart);
 }

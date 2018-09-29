@@ -1,10 +1,7 @@
 package com.oa.me.Dao;
 
 import com.oa.me.Entity.SysPermission;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -26,4 +23,22 @@ public interface RoleDao {
             @Result(property = "parentName", column = "parent_ids")
     })
     List<SysPermission> getPermissions(int role_id);
+
+
+    /**
+     * 用成员身份代号获取成员身份名称
+     * @param role
+     * @return
+     */
+    @Select("select dict_item_name from oa_dict_member_role where dict_id=#{role}")
+    String getNameById(@Param("role") int role);
+
+
+    /**
+     * 用成员身份名称获取员身份代号
+     * @param role
+     * @return
+     */
+    @Select("select dict_id from oa_dict_member_role where dict_item_name=#{role}")
+    String getIdByName(@Param("role") String role);
 }

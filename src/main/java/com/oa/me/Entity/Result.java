@@ -10,6 +10,15 @@ public class Result<T> {
     private boolean success;
     private Message_oa msg;
     private List<T>   data;
+    private JCondition conditions;
+
+    public JCondition getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(JCondition conditions) {
+        this.conditions = conditions;
+    }
 
     public boolean isSuccess() {
         return success;

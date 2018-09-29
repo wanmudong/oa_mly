@@ -1,6 +1,7 @@
 package com.oa.me.Service;
 
 import com.oa.me.domain.Recruit;
+import com.oa.me.domain.User;
 
 import java.util.List;
 
@@ -12,7 +13,11 @@ public interface RecruitService {
 
     List<Recruit> getRecruitByOther(Recruit recruit);
 
-    Recruit update(String id, String status, String desc, String depart);
+    Recruit update(int id, int status, String desc, String depart);
 
     boolean apply(Recruit recruit);
+
+    List<Recruit> getRecruitByContent(String content, String depart, String campus_0);
+
+    List<Recruit> getRecruitByContentAndCampus(String content, String department, String campus);
 }

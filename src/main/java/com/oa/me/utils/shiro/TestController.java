@@ -130,10 +130,10 @@ public class TestController {
         Long currentUserId = (Long) SecurityUtils.getSubject().getSession().getAttribute("currentUserId");
         return currentUserId;
     }
-    @GetMapping("test5")
-    public List<User> test5(String any){
-        return userDao.getUserByAny(any);
-    }
+//    @GetMapping("test5")
+//    public List<User> test5(String any){
+//        return userDao.getUserByAny(any);
+//    }
     @GetMapping("test6")
     public void  test6(HttpServletResponse response) throws IOException {
 

@@ -11,5 +11,5 @@ import org.apache.ibatis.annotations.Select;
 public interface CampusDao {
 
     @Select("select dict_item_name from oa_dict_campus where dict_id = #{campus}")
-    String getCampusName(@Param("campus") String campus);
+    String getCampusName(@Param("campus") int campus);
 }

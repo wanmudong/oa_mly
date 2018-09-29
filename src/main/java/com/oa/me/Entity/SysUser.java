@@ -51,6 +51,19 @@ public class SysUser implements Serializable {
 //     * 创建时间
 //     */
 //    private Date createTime;
+    /**
+     * 角色
+     */
+    private String role;
+
+    /**
+     * 部门
+     */
+    private  String depart;
+    /**
+     * 校区
+     */
+    private  String campus;
 
     /**
      * 角色ID列表
@@ -58,6 +71,29 @@ public class SysUser implements Serializable {
     @TableField(exist=false)
     private List<Integer> roleIdList;
 
+    public String getCampus() {
+        return campus;
+    }
+
+    public void setCampus(String campus) {
+        this.campus = campus;
+    }
+
+    public String getDepart() {
+        return depart;
+    }
+
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -102,6 +138,7 @@ public class SysUser implements Serializable {
     public void setRoleIdList(List<Integer> roleIdList) {
         this.roleIdList = roleIdList;
     }
+
 
     @Override
     public String toString() {

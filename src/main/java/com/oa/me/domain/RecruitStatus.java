@@ -14,13 +14,13 @@ public class RecruitStatus<T> {
     private  int current;
     /**
      * 当前考核状态
-     * 1，通过。2，未通过
+     * 1，未通过  normal。2，通过
      */
     private int status;
     /**
      * 面试各轮情况
      */
-    private List<T> steplist;
+    private List<T> steps;
 
     public int getCurrent() {
         return current;
@@ -38,11 +38,19 @@ public class RecruitStatus<T> {
         this.status = status;
     }
 
-    public List<T> getSteplist() {
-        return steplist;
+//    public List<T> getSteplist() {
+//        return steplist;
+//    }
+//
+//    public void setSteplist(List<T> steplist) {
+//        this.steplist = steplist;
+//    }
+
+    public List<T> getSteps() {
+        return steps;
     }
 
-    public void setSteplist(List<T> steplist) {
-        this.steplist = steplist;
+    public void setSteps(List<T> steps) {
+        this.steps = steps;
     }
 }

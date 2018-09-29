@@ -16,7 +16,14 @@ public interface UserService {
 
     User getUserByStuid(String stuid);
 
-    List<User> getUserByAll(String anything);
+ //   List<User> getUserByContent(String anything, int depart, String circle, String campus);
 
     boolean updateMember(User user);
+
+
+    public List<User> getUserByContent(String content, String depart,String campus);
+
+    public List<User> getUserByContent(String content, String depart, String circle, String campus);
+
+    boolean updateMemberByMe(String key, String stuid, String qq, String email, String phone, String debitcard);
 }

@@ -15,7 +15,7 @@ public interface AnnounceDao {
      * 查找所有通知
      * @return
      */
-    @Select("select * from oa_announce")
+    @Select("select * from oa_announce order by id desc")
     List<Announce> getAnnounce();
 
     /**

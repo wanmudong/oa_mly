@@ -36,7 +36,6 @@ public class RealmKit implements IShiro {
     }
 
     public  SysUser getSysuser(String username){
-
      return userDao.findSysUserByUsername(username);
     }
 
@@ -52,6 +51,7 @@ public class RealmKit implements IShiro {
 
     @Override
     public SysUser findSysUserByUsername(String i) {
+//        SysUser sysUser = userDao.findSysUserByUsername(i);
         return userDao.findSysUserByUsername(i);
     }
 

@@ -6,15 +6,15 @@ package com.oa.me.domain;
 public class Recruit {
    private int id;
     private String name;
-    private String stuid;
+    private int stuid;
     private String  sex;
     private String phone;
     private String qq;
-    private String depart;
+    private int depart;
     private String  time;
     private int  status;
     private int  current;
-    private String  campus;
+    private int  campus;
     private String college;
     private String  major;
     private String  say;
@@ -62,11 +62,20 @@ public class Recruit {
         this.name = name;
     }
 
-    public String getStuid() {
+//    public String getStuid() {
+//        return stuid;
+//    }
+//
+//    public void setStuid(String stuid) {
+//        this.stuid = stuid;
+//    }
+
+
+    public int getStuid() {
         return stuid;
     }
 
-    public void setStuid(String stuid) {
+    public void setStuid(int stuid) {
         this.stuid = stuid;
     }
 
@@ -94,11 +103,20 @@ public class Recruit {
         this.qq = qq;
     }
 
-    public String getDepart() {
+//    public String getDepart() {
+//        return depart;
+//    }
+//
+//    public void setDepart(String depart) {
+//        this.depart = depart;
+//    }
+
+
+    public int getDepart() {
         return depart;
     }
 
-    public void setDepart(String depart) {
+    public void setDepart(int depart) {
         this.depart = depart;
     }
 
@@ -126,11 +144,19 @@ public class Recruit {
         this.current = current;
     }
 
-    public String getCampus() {
+//    public String getCampus() {
+//        return campus;
+//    }
+//
+//    public void setCampus(String campus) {
+//        this.campus = campus;
+//    }
+
+    public int getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(int campus) {
         this.campus = campus;
     }
 

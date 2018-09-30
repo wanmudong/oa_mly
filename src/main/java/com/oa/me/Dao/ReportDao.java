@@ -193,7 +193,7 @@ public interface ReportDao {
 
     @Select("select m.depart,m.name,m.stuid,m.sex,m.college,m.phone,m.debitcard,r.salary,r.content,r.time_report,r.id  " +
             "from oa_report r left  join oa_member m on r.uid=m.id where  " +
-            "(r.start_date=#{start_date_long} and m.status = 1,and m.depart = #{depart},and m.campus = #{campus}) order by r.id desc")
+            "(r.start_date=#{start_date_long} and m.status = 1 and m.depart = #{depart} and m.campus = #{campus}) order by r.id desc")
     @Results({
             @Result(property = "depart",  column = "depart"),
             @Result(property = "username",  column = "name"),

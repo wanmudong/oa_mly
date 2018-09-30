@@ -34,10 +34,10 @@ public interface UserDao {
 
 
     /**
-     * 获取所有用户
+     * 获取用户列表
      * @return
      */
-    @Select("select id,stuid,name,sex,depart,debitcard,role,status,join_time,exit_time,phone,email,qq,campus,college,major from oa_member")
+    @Select("select id,stuid,name,sex,depart,debitcard,role,status,join_time,exit_time,phone,email,qq,campus,college,major from oa_member order by id")
     List<User> getAllUser();
 
     /**
@@ -81,22 +81,17 @@ public interface UserDao {
 
 
     @Select("select * from oa_member where " +
-//            "id  like '%${anything}%' or " +
             "(stuid  like '%${content}%' or " +
             "name  like '%${content}%' or " +
-//            "sex  like '%${anything}%' or " +
-//            "depart like '%${anything}%' or " +
-//            "debitcard  like '%${anything}%' or " +
-//            "email  like '%${anything}%' or " +
-//            "qq  like '%${anything}%' or " +
-//            "college  like '%${anything}%' or " +
-//            "campus  like '%${anything}%' or " +
-//            "major  like '%${anything}%'
             "phone  like '%${content}%') and status=1  "
                 )
     List<User> getUserByContent(@Param("content") String content);
 
-
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
     @Update("update oa_member set name=#{name}," +
             "depart=#{depart}," +
             "phone=#{phone}," +
@@ -107,11 +102,6 @@ public interface UserDao {
             "debitcard=#{debitcard}," +
             "pwd=#{pwd}," +
             "email=#{email} where stuid = #{stuid} ")
-//    @Results({
-//            @Result(property = "c",  column = "debitcard"),
-//            @Result(property = "name", column = "name"),
-//            @Result(property = "remark", column = "remark")
-//    })
     long updateMember(User user);
 
 

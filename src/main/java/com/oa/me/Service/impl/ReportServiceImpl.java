@@ -255,7 +255,7 @@ public class ReportServiceImpl implements ReportService {
         start_date = timeUtil.dateTime(Long.parseLong(timeUtil.dateTimeStamp(start_date,"yyyy-MM-dd")),"yyyy-MM-dd HH:mm:ss");
         start_date =  timeUtil.dateTimeStamp(start_date,"yyyy-MM-dd HH:mm:ss");
 
-        long start_date_long = Long.parseLong(timeUtil.dateTimeStamp(start_date,"yyyy-MM-dd HH:mm:ss"));
+        long start_date_long = Long.parseLong(start_date);
 
 
         List<RReport>  list = reportDao.getReport(depart1,campus_0,start_date_long);

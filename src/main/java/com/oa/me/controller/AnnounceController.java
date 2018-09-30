@@ -4,11 +4,7 @@ import com.oa.me.Entity.Message_oa;
 import com.oa.me.Entity.Result;
 import com.oa.me.Entity.SysUser;
 import com.oa.me.Service.AnnounceService;
-import com.oa.me.Service.UserService;
-import com.oa.me.domain.Announce;
 import com.oa.me.domain.AnnounceModel;
-import com.oa.me.domain.UserOa;
-import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -22,79 +18,86 @@ import java.util.List;
  */
 @RestController
 @EnableAutoConfiguration
+@RequestMapping("/api/announce")
 public class AnnounceController {
     @Resource
     private AnnounceService announceService;
 
-    @GetMapping("/api/announce")
-    public Result<AnnounceModel> getAnnounceModel(){
+    /**
+     * 用于主页面通知的显示
+     *
+     * @return
+     */
+    @GetMapping("")
+    public Result<AnnounceModel> getAnnounceModel() {
         Result result = new Result();
-        List<AnnounceModel> list= new ArrayList<AnnounceModel>();
+        List<AnnounceModel> list = new ArrayList<AnnounceModel>();
         Message_oa mo = new Message_oa();
+
+        /**
+         * 判断用户是否注销
+         */
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null)
-        {
+        if (sysuser == null) {
             //用户已注销
             result.setMsg(mo);
             result.getMsg().setText("用户已注销");
             return result;
-        }else {
+        } else {
             mo.setLogin(true);
         }
 
 
-//            Result<AnnounceModel> result = new Result<AnnounceModel>();
-//            List<AnnounceModel> list= new ArrayList<AnnounceModel>();
-//            Message_oa mo = new Message_oa();
+        list = announceService.getAnnounceModel();
 
-            list =  announceService.getAnnounceModel();
-            if (list.isEmpty()){
-                result.setSuccess(false);
-//                mo.setLogin(true);
-                mo.setText("请求失败！");
-
-                result.setMsg(mo);
-                return result;
-            }
-
-            result.setSuccess(true);
-//            mo.setLogin(true);
-            mo.setText("请求成功！");
+        if (list.isEmpty()) {
+            result.setSuccess(false);
+            mo.setText("请求失败！");
 
             result.setMsg(mo);
-            result.setData(list);
-
             return result;
+        }
+
+        result.setSuccess(true);
+        mo.setText("请求成功！");
+
+        result.setMsg(mo);
+        result.setData(list);
+
+        return result;
     }
 
-
-
-    @PostMapping("/api/announce")
-    public Result<AnnounceModel> setAnnounceModel(AnnounceModel announceModel){
-//        Result<AnnounceModel> result = new Result<AnnounceModel>();
-//        List<AnnounceModel> list= new ArrayList<AnnounceModel>();
-//        Message_oa mo = new Message_oa();
+    /**
+     * 上传通知
+     *
+     * @param announceModel
+     * @return
+     */
+    @PostMapping("")
+    public Result<AnnounceModel> setAnnounceModel(AnnounceModel announceModel) {
 
         Result result = new Result();
-        List<AnnounceModel> list= new ArrayList<AnnounceModel>();
+        List<AnnounceModel> list = new ArrayList<AnnounceModel>();
         Message_oa mo = new Message_oa();
+
+        /**
+         * 判断用户是否注销
+         */
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null)
-        {
+        if (sysuser == null) {
             //用户已注销
             result.setMsg(mo);
             result.getMsg().setText("用户已注销");
             return result;
-        }else {
+        } else {
             mo.setLogin(true);
         }
 
-
-
-
-        if ( announceModel.getTitle().equals("")){
+        /**
+         * 判断标题是否为空
+         */
+        if (announceModel.getTitle()==null||announceModel.getTitle().equals("")) {
             result.setSuccess(false);
-//            mo.setLogin(true);
             mo.setText("标题不能为空");
 
             result.setMsg(mo);
@@ -105,11 +108,10 @@ public class AnnounceController {
         boolean issussess = announceService.setAnnounceModel(announceModel);
 
         result.setSuccess(issussess);
-//        mo.setLogin(true);
-        if (issussess){
-        mo.setText("发布成功");
+        if (issussess) {
+            mo.setText("发布成功");
 
-        }else {
+        } else {
             mo.setText("发布失败");
         }
 
@@ -118,30 +120,37 @@ public class AnnounceController {
         return result;
     }
 
-    @GetMapping("/api/del/announce")
-    public Result<AnnounceModel> setAnnounceModel(int id){
+    /**
+     * 用于删除一条通知，需要知道该条通知的id
+     * @param id
+     * @return
+     */
+    @GetMapping("/del")
+    public Result<AnnounceModel> setAnnounceModel(int id) {
 
         Result result = new Result();
-        List<AnnounceModel> list= new ArrayList<AnnounceModel>();
+        List<AnnounceModel> list = new ArrayList<AnnounceModel>();
         Message_oa mo = new Message_oa();
+
+        /**
+         * 判断用户是否注销
+         */
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null)
-        {
+        if (sysuser == null) {
             //用户已注销
             result.setMsg(mo);
             result.getMsg().setText("用户已注销");
             return result;
-        }else {
+        } else {
             mo.setLogin(true);
         }
 
-        boolean issuccess= announceService.delAnnounce(id);
-        result.setSuccess(issuccess);
-//        mo.setLogin(true);
-        if (issuccess){
-            mo.setText("删除成功");
+        boolean issuccess = announceService.delAnnounce(id);
 
-        }else {
+        result.setSuccess(issuccess);
+        if (issuccess) {
+            mo.setText("删除成功");
+        } else {
             mo.setText("删除失败");
         }
 

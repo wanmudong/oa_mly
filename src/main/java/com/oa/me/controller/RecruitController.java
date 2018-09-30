@@ -7,6 +7,7 @@ import com.oa.me.domain.*;
 import com.oa.me.utils.Format;
 import com.oa.me.utils.LoginUtil;
 import com.oa.me.utils.mapperUser;
+import com.oa.me.utils.timeUtil;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.xssf.usermodel.*;
@@ -291,7 +292,7 @@ public class RecruitController {
                 row1.createCell(5).setCellValue(recruit.getMajor());
                 row1.createCell(6).setCellValue(recruit.getQq());
                 row1.createCell(7).setCellValue(recruit.getPhone());
-                row1.createCell(8).setCellValue(recruit.getTime());
+                row1.createCell(8).setCellValue(timeUtil.dateTime(Long.parseLong(recruit.getTime()),"yyyy-MM-dd"));
                 row1.createCell(9).setCellValue(recruit.getSay());
 
                 rowNum++;

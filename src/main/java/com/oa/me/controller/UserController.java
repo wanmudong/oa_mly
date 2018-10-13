@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -55,19 +57,6 @@ public class UserController {
     private DepartDao departDao;
     @Resource
     private DictDao dictDao;
-
-//    @GetMapping("/index")
-//    public String index() {
-//        System.out.println(SecurityUtils.getSubject().getPrincipal());
-//        return "index"; //当浏览器输入/index时，会返回 /templates/home.html页面
-//    }
-
-
-//    @RequestMapping("/userList")
-//    @RequiresPermissions("userInfo:view")//权限管理;
-//    public String userInfo() {
-//        return "userInfo";
-//    }
 
     /**
      * 用户登录的接口
@@ -153,14 +142,6 @@ public class UserController {
 
     }
 
-//    @GetMapping("/hello")
-//    public int hello() {
-//
-//        String pwd = md5(md5(md5("online666")) + "nrh575");
-//        int time = getSecondTimeNow();
-//        return time;
-//    }
-
     /**
      * 用来获取所有存在于数据库的用户的接口
      * @return
@@ -170,16 +151,17 @@ public class UserController {
     public Result<User> getAllUser() {
         Result result = new Result();
         Message_oa mo = new Message_oa();
+        mo.setLogin(true);
         List<User> list = userService.getAllUser();
-        //TODO：权限管理
-        if (list != null) {
-            result.setData(list);
-            mo.setText("获取成功！");
-
-            result.setMsg(mo);
-            result.setSuccess(true);
-            return result;
-        }
+//        //TODO：权限管理
+//        if (list != null) {
+//            result.setData(list);
+//            mo.setText("获取成功！");
+//
+//            result.setMsg(mo);
+//            result.setSuccess(true);
+//            return result;
+//        }
         mo.setText("获取失败！");
         result.setMsg(mo);
 
@@ -197,19 +179,19 @@ public class UserController {
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
-
-        /**
-         * 判断用户是否注销
-         */
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        /**
+//         * 判断用户是否注销
+//         */
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
         //判断所传stuid是否为空
         if (stuid==null||stuid.equals(""))
         {
@@ -243,21 +225,26 @@ public class UserController {
         return result;
     }
 
+    /**
+     *根据登录的个人信息返回返回个人的详细信息以及相关设定好的字段
+     * @return
+     */
     @GetMapping("/api/getUserByStuid")
     @ResponseBody
     public Result getNowUser() {
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
+        mo.setLogin(true);
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
         String stuid = sysuser.getUsername();
         User user = userService.getUserByStuid(stuid);
         Map<String, List<Dict>> dict = dictService.getAllDict();
@@ -311,14 +298,15 @@ public class UserController {
 
 
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            jResult.setMsg(mo);
-            jResult.getMsg().setText("用户已注销");
-            return jResult;
-        } else {
-            mo.setLogin(true);
-        }
+//        if (sysuser == null) {
+//            //用户已注销
+//            jResult.setMsg(mo);
+//            jResult.getMsg().setText("用户已注销");
+//            return jResult;
+//        } else {
+//            mo.setLogin(true);
+//        }
+        mo.setLogin(true);
 
         String depart1 = sysuser.getDepart();
         Integer role = Integer.valueOf(sysuser.getRole());
@@ -375,16 +363,17 @@ public class UserController {
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null)
-        {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null)
+//        {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }else {
+//            mo.setLogin(true);
+//        }
 
         boolean success = false;
 
@@ -424,7 +413,7 @@ public class UserController {
     public void gerExcel(HttpServletResponse response, String depart,String  campus, String content,String period) throws IOException {
         List<User> list = new ArrayList<User>();
         Message_oa mo = new Message_oa();
-
+        mo.setLogin(true);
         depart = dictDao.getDepartIdByName(depart);
         campus = dictDao.getCampusIdByName(campus)=="0"?"":dictDao.getCampusIdByName(campus);
 
@@ -564,15 +553,17 @@ public class UserController {
         Message_oa mo = new Message_oa();
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
         int uid1;
-        if (sysuser == null)
-        {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }else {
-            mo.setLogin(true);
-        }
+
+        mo.setLogin(true);
+//        if (sysuser == null)
+//        {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }else {
+//            mo.setLogin(true);
+//        }
 
         if (uid == null || uid.equals("")) {
             uid1 = sysuser.getId();
@@ -621,15 +612,16 @@ public class UserController {
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null)
-        {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }else {
-            mo.setLogin(true);
-        }
+//        if (sysuser == null)
+//        {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }else {
+//            mo.setLogin(true);
+//        }
+        mo.setLogin(true);
 
         boolean success = false;
 

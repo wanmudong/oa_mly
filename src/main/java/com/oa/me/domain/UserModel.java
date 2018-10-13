@@ -5,7 +5,7 @@ package com.oa.me.domain;
  */
 public class UserModel {
     /**
-     * 用于接收登录表单的用户实体
+     * 用于接收登录表单的成员的实体
      */
     //用户名
     private String username;

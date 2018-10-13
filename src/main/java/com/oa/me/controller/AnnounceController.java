@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class AnnounceController {
     @Resource
     private AnnounceService announceService;
 
+
+
     /**
      * 用于主页面通知的显示
      *
@@ -33,19 +37,20 @@ public class AnnounceController {
         Result result = new Result();
         List<AnnounceModel> list = new ArrayList<AnnounceModel>();
         Message_oa mo = new Message_oa();
+        mo.setLogin(true);
+//        /**
+//         * 判断用户是否注销
+//         */
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
 
-        /**
-         * 判断用户是否注销
-         */
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
 
 
         list = announceService.getAnnounceModel();
@@ -79,19 +84,19 @@ public class AnnounceController {
         Result result = new Result();
         List<AnnounceModel> list = new ArrayList<AnnounceModel>();
         Message_oa mo = new Message_oa();
-
-        /**
-         * 判断用户是否注销
-         */
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        /**
+//         * 判断用户是否注销
+//         */
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
 
         /**
          * 判断标题是否为空
@@ -132,18 +137,20 @@ public class AnnounceController {
         List<AnnounceModel> list = new ArrayList<AnnounceModel>();
         Message_oa mo = new Message_oa();
 
-        /**
-         * 判断用户是否注销
-         */
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+
+//        /**
+//         * 判断用户是否注销
+//         */
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
 
         boolean issuccess = announceService.delAnnounce(id);
 
@@ -158,4 +165,5 @@ public class AnnounceController {
         result.setData(list);
         return result;
     }
+
 }

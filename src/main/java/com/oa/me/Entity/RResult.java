@@ -2,54 +2,32 @@ package com.oa.me.Entity;
 
 
 import com.oa.me.domain.Recruit;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * Created by chenjiehao on 2018/9/17
  */
+@Data
 public class RResult<T> {
+    /**
+     * 招新的相关返回给前端的实体
+     */
+    /**
+     * 请求是否成功
+     */
     private boolean success;
+
+    /**
+     * 请求的信息
+     */
     private Message_oa msg;
+
+    /**
+     * 请求的数据
+     */
     private Object data;
 
-    public boolean isSuccess() {
-        return success;
-    }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public Message_oa getMsg() {
-        return msg;
-    }
-
-    public void setMsg(Message_oa msg) {
-        this.msg = msg;
-    }
-//
-//    public List<T> getData() {
-//        return data;
-//    }
-//
-//    public void setData(List<T> data) {
-//        this.data = data;
-//    }
-
-//    public Recruit getData() {
-//        return data;
-//    }
-//
-//    public void setData(Recruit data) {
-//        this.data = data;
-//    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
 }

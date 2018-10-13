@@ -4,6 +4,9 @@ package com.oa.me.domain;
  * Created by chenjiehao on 2018/9/22
  */
 public class Step {
+    /**
+     * 招新面试每一轮的信息的实体
+     */
     private int key;
     private String title;
     private String desc;

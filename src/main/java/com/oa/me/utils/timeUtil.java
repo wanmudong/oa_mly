@@ -6,6 +6,10 @@ import java.util.Date;
 /**
  * Created by chenjiehao on 2018/9/19
  */
+
+/**
+ * 对对时间进行操作的工具类
+ */
 public class timeUtil {
     /**
      * 获取精确到秒的时间戳

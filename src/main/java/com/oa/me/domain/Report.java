@@ -4,7 +4,9 @@ package com.oa.me.domain;
  * Created by chenjiehao on 2018/9/22
  */
 public class Report {
-
+/**
+ * 用于存储汇报信息的实体
+ */
     /**
      * 自增，PrimaryKey
      */

@@ -36,6 +36,11 @@ public class ReportController {
     @Resource
     private DictDao dictDao;
 
+    /**
+     * 获取个人汇报历史
+     * @param uid1
+     * @return
+     */
     @GetMapping("/history")
     public Result history(String uid1) {
         Result result = new Result();
@@ -51,12 +56,14 @@ public class ReportController {
         }
 
         jCondition.setUid(uid);
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }
+
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }
 
         list = reportService.getHistory(uid);
 
@@ -114,6 +121,11 @@ public class ReportController {
 //
 //    }
 
+    /**
+     * 获取当前汇报状态
+     * @param uid
+     * @return
+     */
     @GetMapping("/status")
     public RResult getStatus(String uid) {
         RResult rResult = new RResult();
@@ -125,12 +137,13 @@ public class ReportController {
         } else {
             uid1 = Integer.parseInt(uid);
         }
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
         RDate rDate = reportService.getStatus(uid1);
 
         if (rDate != null) {
@@ -151,6 +164,13 @@ public class ReportController {
 
     }
 
+    /**
+     * 在权限允许的条件下获取成员的汇报信息
+     * @param campus
+     * @param contact
+     * @param depart
+     * @return
+     */
     @GetMapping("")
     public Result getReportsbByContact(String campus, String contact, String depart) {
 
@@ -168,15 +188,15 @@ public class ReportController {
         depart = dictDao.getDepartIdByName(depart);
         campus = dictDao.getCampusIdByName(campus) == "0" ? "" : dictDao.getCampusIdByName(campus);
 
-
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
 
 
         String depart_0 = sysuser.getDepart();
@@ -219,18 +239,23 @@ public class ReportController {
 
 //
 
-
+    /**
+     * 修改汇报状态
+     * @param rDate
+     * @return
+     */
     @PostMapping("/status")
     public RResult setStatus(RDate rDate) {
         RResult rResult = new RResult();
         Message_oa mo = new Message_oa();
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+        mo.setLogin(true);
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
         //TODO:权限控制
         boolean success=false;
         if (rDate.getReport_stat().equals("close")) {
@@ -258,6 +283,13 @@ public class ReportController {
         return rResult;
 
     }
+
+    /**
+     * 存储接收到的汇报信息
+     * @param content
+     * @param suggestion
+     * @return
+     */
     @PostMapping("")
     public RResult getReportsbByContact(String content, String suggestion)
     {
@@ -270,12 +302,14 @@ public class ReportController {
 //        } else {
 //            uid1 = Integer.parseInt(uid);
 //        }
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
 
         boolean success = reportService.setReport(uid1,content,suggestion);
 
@@ -300,24 +334,33 @@ public class ReportController {
 
     }
 
-
+    /**
+     * 对某一汇报进行审核
+     * @param id
+     * @param comment
+     * @param rate
+     * @param salary_sug
+     * @param salary
+     * @return
+     */
     @PostMapping("/review")
     public Result review(int id,String comment,String rate,String salary_sug,String salary){
         Result result = new Result();
         Message_oa mo = new Message_oa();
+        mo.setLogin(true);
         int uid1 = 0;
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
 //        if (uid == null || uid.equals("")) {
 //        uid1 = sysuser.getId();
 //        } else {
 //            uid1 = Integer.parseInt(uid);
 //        }
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }
 
         boolean success = reportService.setReportByAdmin(id,comment,rate,salary_sug,salary);
 
@@ -339,6 +382,14 @@ public class ReportController {
         return result;
 
     }
+
+    /**
+     * 在权限允许的条件下获取条件选择后的excel文件
+     * @param response
+     * @param end_date
+     * @param start_date
+     * @throws IOException
+     */
     @GetMapping("/excel")
     @ResponseBody
     public void test6(HttpServletResponse response, String end_date,String start_date) throws IOException {

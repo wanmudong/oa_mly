@@ -25,22 +25,27 @@ public class FeedbackController {
     @Resource
     private FeedbackService feedbackService;
 
+    /**
+     * 获取所有的反馈信息
+     * @return
+     */
     @GetMapping("")
     public Result getAllFeedback(){
 
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null)
-        {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null)
+//        {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }else {
+//            mo.setLogin(true);
+//        }
 
         boolean success = false;
 
@@ -59,22 +64,30 @@ public class FeedbackController {
         return result;
 
     }
+
+    /**
+     * 存储一个反馈信息
+     * @param value
+     * @param content
+     * @param request
+     * @return
+     */
     @PostMapping("")
     public Result setFeedback(int value, String content,HttpServletRequest request){
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-
-        if (sysuser == null)
-        {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        if (sysuser == null)
+//        {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }else {
+//            mo.setLogin(true);
+//        }
 
         int  uid = sysuser.getId();
         int  type = value;

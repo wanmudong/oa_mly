@@ -9,7 +9,11 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface    CampusDao {
-
+    /**
+     * 以校区的代码获取校区名称
+     * @param campus
+     * @return
+     */
     @Select("select dict_item_name from oa_dict_campus where dict_id = #{campus}")
     String getCampusName(@Param("campus") int campus);
 }

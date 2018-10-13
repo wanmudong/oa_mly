@@ -34,9 +34,13 @@ public class RecruitController {
     private DictDao dictDao;
 
 
-
-
-
+    /**
+     * 获取当前所有的招新信息
+     * @param content
+     * @param depart
+     * @param campus
+     * @return
+     */
     @GetMapping("/api/recruit")
     @ResponseBody
     public JResult getRecruit(String content,String depart,String campus){
@@ -58,22 +62,26 @@ public class RecruitController {
         depart = dictDao.getDepartIdByName(depart);
         campus = dictDao.getCampusIdByName(campus)=="0"?"":dictDao.getCampusIdByName(campus);
 
-
-        if (sysuser == null)
-        {
-            //用户已注销
-            jResult.setMsg(mo);
-            jResult.getMsg().setText("用户已注销");
-            return jResult;
-        }else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        if (sysuser == null)
+//        {
+//            //用户已注销
+//            jResult.setMsg(mo);
+//            jResult.getMsg().setText("用户已注销");
+//            return jResult;
+//        }else {
+//            mo.setLogin(true);
+//        }
 
 
         String depart_0 = sysuser.getDepart();
         Integer role =Integer.valueOf( sysuser.getRole());
         String campus_0 = sysuser.getCampus();
 
+        /**
+         * 根据权限进行不同的招新查询
+         */
+        //TODO:利用动态sql减少系统的逻辑处理
         if (role==0){
             jData.setData(list);
             mo.setText("获取失败,权限不足！");
@@ -113,24 +121,32 @@ public class RecruitController {
     }
 
 
-
+    /**
+     * 修改某条招新信息
+     * @param id
+     * @param status
+     * @param desc
+     * @param depart
+     * @return
+     */
     @PostMapping ("api/recruit/{id}")
     public RResult update(@PathVariable("id") int id, int status, String desc, String depart){
     //    RRecruit rRecruit = new RRecruit();
         RResult rResult = new RResult();
 //        List list = new ArrayList();
         Message_oa mo = new Message_oa();
+        mo.setLogin(true);
         //Result result = new Result();
     //    Message_oa mo = new Message_oa();
       //  mo.setLogin(LoginUtil.isLogin());
   //      List<Recruit> list =  new ArrayList<Recruit>();
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
 
 
         Recruit recruit = recruitService.update(id,status,desc,depart);
@@ -152,6 +168,12 @@ public class RecruitController {
         rResult.setSuccess(false);
         return rResult;
     }
+
+//    /**
+//     * 对一条招新信息的插入
+//     * @param Recruit
+//     * @return
+//     */
 //    @PostMapping ("api/recruit/apply")
 //    public Result apply(Recruit recruit){
 //
@@ -179,6 +201,12 @@ public class RecruitController {
 //        return result;
 //
 //    }
+
+    /**
+     * 单独获取一条招新信息
+     * @param id
+     * @return
+     */
     @GetMapping ("api/recruit/{id}")
     public RResult getRecruitById(@PathVariable("id") int id)
     {
@@ -187,14 +215,14 @@ public class RecruitController {
 //        List list = new ArrayList();
         Message_oa mo = new Message_oa();
 
-
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+        mo.setLogin(true);
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
 
        Recruit recruit =  recruitService.getRecruitById(id);
 
@@ -216,13 +244,23 @@ public class RecruitController {
 
 
     }
+
+    /**
+     *将根据相关查询条件获取
+     * @param response
+     * @param depart
+     * @param campus
+     * @param content
+     * @param period
+     * @throws IOException
+     */
     @GetMapping("/api/recruit/excel")
     @ResponseBody
     public void gerExcel(HttpServletResponse response, String depart, String  campus, String content, String period) throws IOException {
         List<Recruit> list = new ArrayList<Recruit>();
         List<RRecruit> list1 = new ArrayList<RRecruit>();
         Message_oa mo = new Message_oa();
-
+        mo.setLogin(true);
         depart = dictDao.getDepartIdByName(depart);
         campus = dictDao.getCampusIdByName(campus)=="0"?"":dictDao.getCampusIdByName(campus);
 

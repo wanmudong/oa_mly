@@ -1,5 +1,6 @@
 package com.oa.me.domain;
 
+import lombok.Data;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Created by chenjiehao on 2018/9/22
  */
+@Data
 public class RecruitStatus<T> {
     /**、
      * 当前面试状态

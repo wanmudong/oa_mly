@@ -1,13 +1,39 @@
 package com.oa.me.Entity;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/24
  */
+@Data
 public class JCondition {
+    /**
+     * 查询条件
+     */
+
+    /**
+     * 界别
+     */
     private String period;
+
+    /**
+     * 部门
+     */
     private String depart;
+
+    /**
+     * 校区
+     */
     private String campus;
+
+    /**
+     * 内容
+     */
     private String content;
+
+    /**
+     * 内容
+     */
     private String contact;
     private int uid;
 

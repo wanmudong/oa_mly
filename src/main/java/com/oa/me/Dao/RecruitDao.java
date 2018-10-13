@@ -29,7 +29,13 @@ public interface RecruitDao {
     @Select("select * from oa_recruit where depart=#{recruit.depart} and campus=#{recruit.campus}and ( time between #{recruit.start_date} and #{recruit.end_date})and status=1")
     List<Recruit> getRecruitAll(@Param("recruit") Recruit recruit);
 
-
+    /**
+     * 更新一条招新信息的部门
+     * @param id
+     * @param depart
+     * @param current
+     * @return
+     */
     @Update("update oa_recruit set depart=#{depart},current=#{current} where id = #{id} ")
     Long updateDepart(@Param("id") int id, @Param("depart") Integer depart,@Param("current") int current);
 
@@ -52,14 +58,22 @@ public interface RecruitDao {
     @Update("update oa_recruit set status = #{status} where id = #{id} ")
     Long updateStatus(@Param("id") int id, @Param("status") int status);
 
-
+    /**
+     * 获取一条招新信息的当前面试状态
+     * @param id
+     * @return
+     */
     @Select("select current from oa_recruit where id=#{id} and status=1")
     Integer getCurrent(@Param("id")String id);
 
     @Update("update oa_recruit_log set step_${status}='${desc}' where rid= ${id}")
     Long updateLog(@Param("id")int id, @Param("status")int status,@Param("desc") String desc);
 
-
+    /**
+     * 插入一条招新信息
+     * @param recruit
+     * @return
+     */
     @Insert("insert into oa_recruit(name,stuid,sex,phone,qq,depart,time,status,current,campus,college,major,say) values(" +
             "#{name}," +
             "#{stuid}," +
@@ -76,6 +90,13 @@ public interface RecruitDao {
             "#{say})" )
     long apply(Recruit recruit);
 
+    /**
+     * 根据content，depart，campus查询招新信息
+     * @param content
+     * @param depart
+     * @param campus
+     * @return
+     */
     @Select("select * from oa_recruit where( " +
 //            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
@@ -92,6 +113,11 @@ public interface RecruitDao {
     )
     List<Recruit> getRecruitByContentAll(@Param("content") String content,@Param("depart") int depart,@Param("campus") int campus);
 
+    /**
+     * 通过content来模糊查询招新信息
+     * @param content
+     * @return
+     */
     @Select("select * from oa_recruit where ( " +
 //            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
@@ -109,6 +135,12 @@ public interface RecruitDao {
     List<Recruit> getRecruitByContent(@Param("content") String content);
 //    List<Recruit> getUserByContent(String content);
 
+    /**
+     * 通过content，depart获取招新信息
+     * @param content
+     * @param depart
+     * @return
+     */
     @Select("select * from oa_recruit where( " +
 //            "id  like '%${anything}%' or " +
                    "stuid  like '%${content}%' or " +
@@ -126,6 +158,12 @@ public interface RecruitDao {
     List<Recruit> getRecruitByContentByDepart(@Param("content") String content,@Param("depart") int depart);
 //    List<Recruit> getUserByContentByDepart(String content, String department);
 
+    /**
+     * 通过content，campus获取招新信息
+     * @param content
+     * @param campus
+     * @return
+     */
     @Select("select * from oa_recruit where( " +
 //            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +

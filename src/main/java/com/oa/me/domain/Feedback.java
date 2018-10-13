@@ -1,9 +1,15 @@
 package com.oa.me.domain;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/28
  */
+@Data
 public class Feedback {
+    /**
+     * 用于存储从数据库查找到的反馈信息的实体
+     */
     private String content;
     private String depart;
     private int id;

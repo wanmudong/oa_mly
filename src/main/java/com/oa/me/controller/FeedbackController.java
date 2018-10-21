@@ -48,20 +48,23 @@ public class FeedbackController {
 //        }
 
         boolean success = false;
-
-      list = feedbackService.getAllFeedback();
-        if (list !=null) {
+        try {
+            list = feedbackService.getAllFeedback();
+        }catch (Exception e){
+            mo.setText("获取失败！");
+            result.setMsg(mo);
+            result.setSuccess(false);
+            return result;
+        }
+//        if (list !=null) {
             result.setData(list);
 
             mo.setText("获取成功");
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-        }
-        mo.setText("获取失败！");
-        result.setMsg(mo);
-        result.setSuccess(false);
-        return result;
+//        }
+
 
     }
 
@@ -89,9 +92,11 @@ public class FeedbackController {
 //            mo.setLogin(true);
 //        }
 
-        int  uid = sysuser.getId();
-        int  type = value;
-        boolean success = feedbackService.setFeedback(type,content,uid,request);
+            int uid = sysuser.getId();
+            int type = value;
+            boolean success = feedbackService.setFeedback(type, content, uid, request);
+
+
         if (success) {
 
             mo.setText("反馈成功");
@@ -103,5 +108,7 @@ public class FeedbackController {
         result.setMsg(mo);
         result.setSuccess(false);
         return result;
+
+
     }
 }

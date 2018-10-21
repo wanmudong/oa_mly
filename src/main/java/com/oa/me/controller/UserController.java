@@ -27,10 +27,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +60,31 @@ public class UserController {
     private DepartDao departDao;
     @Resource
     private DictDao dictDao;
+
+
+    /**
+     * 测试token
+     * @param
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/api/test_token")
+    @ResponseBody
+    public String test(HttpServletRequest request){
+        String token = request.getHeader("token");
+//        String cookies = String.valueOf(request.getCookies());
+        Cookie[] cookies =  request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                System.out.println("cookie_____"+cookie);
+            }
+        }
+
+        System.out.println("token:"+token);
+        System.out.println("cookies:"+cookies);
+
+        return  token;
+    }
 
     /**
      * 用户登录的接口
@@ -245,11 +273,21 @@ public class UserController {
 //        } else {
 //            mo.setLogin(true);
 //        }
-        String stuid = sysuser.getUsername();
-        User user = userService.getUserByStuid(stuid);
-        Map<String, List<Dict>> dict = dictService.getAllDict();
+        User user=new User();
+        Map<String, List<Dict>> dict = new HashMap<>();
+        try {
+            String stuid = sysuser.getUsername();
+             user = userService.getUserByStuid(stuid);
+            dict = dictService.getAllDict();
+        } catch (Exception e)
+        {
+            mo.setText("获取失败！");
+            result.setMsg(mo);
+            result.setSuccess(false);
 
-        if (user != null) {
+            return result;
+        }
+      //  if (user != null) {
 
             list.add(user);
             list.add(dict);
@@ -259,12 +297,8 @@ public class UserController {
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-        }
-        mo.setText("获取失败！");
-        result.setMsg(mo);
-        result.setSuccess(false);
+       // }
 
-        return result;
     }
 
     /**
@@ -310,25 +344,34 @@ public class UserController {
 
         String depart1 = sysuser.getDepart();
         Integer role = Integer.valueOf(sysuser.getRole());
+        try {
+            if (role == 0) {
+                jData.setConditions(jCondition);
+                jData.setMembers(jUserList);
+                jResult.setData(jData);
+                mo.setText("获取失败,权限不足！");
+                jResult.setMsg(mo);
+                jResult.setSuccess(false);
+                return jResult;
+            } else if (role == 1) {
+                //部长只能获取本部门的
+                String campus_0 = sysuser.getCampus();
+                list = userService.getUserByContent(content, depart1, campus_0);
 
-        if (role == 0) {
+            } else if (role == 2 || role == 3) {
+                //行政与主管可以根据条件获取
+                list = userService.getUserByContent(content, depart, period, campus);
+            }
+        }catch (Exception e){
             jData.setConditions(jCondition);
             jData.setMembers(jUserList);
             jResult.setData(jData);
-            mo.setText("获取失败,权限不足！");
+            mo.setText("获取失败！");
             jResult.setMsg(mo);
             jResult.setSuccess(false);
             return jResult;
-        } else if (role == 1) {
-            //部长只能获取本部门的
-            String campus_0 = sysuser.getCampus();
-            list = userService.getUserByContent(content, depart1, campus_0);
-
-        } else if (role == 2 || role == 3) {
-            //行政与主管可以根据条件获取
-            list = userService.getUserByContent(content, depart, period, campus);
         }
-        if (!list.isEmpty()) {
+//        if (!list.isEmpty()) {
             for (User user : list) {
                 JUser jUser = mapperUser.mapperJUser(user, dictDao);
                 jUserList.add(jUser);
@@ -341,14 +384,8 @@ public class UserController {
             jResult.setMsg(mo);
             jResult.setSuccess(true);
             return jResult;
-        }
-        jData.setConditions(jCondition);
-        jData.setMembers(jUserList);
-        jResult.setData(jData);
-        mo.setText("获取失败！");
-        jResult.setMsg(mo);
-        jResult.setSuccess(false);
-        return jResult;
+//        }
+
     }
 
     /**

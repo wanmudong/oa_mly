@@ -64,10 +64,17 @@ public class ReportController {
 //            result.getMsg().setText("用户已注销");
 //            return result;
 //        }
-
-        list = reportService.getHistory(uid);
-
-        if (list != null) {
+        try {
+            list = reportService.getHistory(uid);
+        }catch (Exception e)
+        {
+            mo.setText("获取失败！");
+            mo.setLogin(true);
+            result.setMsg(mo);
+            result.setSuccess(false);
+            return result;
+        }
+      //  if (list != null) {
 
 //            RRecruit rRecruit= mapperUser.mapperRRecruit(recruit,dictDao);
 //            result.setData(list);
@@ -78,13 +85,9 @@ public class ReportController {
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-        }
+      //  }
 
-        mo.setText("获取失败！");
-        mo.setLogin(true);
-        result.setMsg(mo);
-        result.setSuccess(false);
-        return result;
+
 
     }
 
@@ -203,18 +206,30 @@ public class ReportController {
         Integer role = Integer.valueOf(sysuser.getRole());
         String campus_0 = sysuser.getCampus();
 
-        if (role == 0) {
-            result.setData(list);
-            mo.setText("获取失败,权限不足！");
+        try {
+
+            if (role == 0) {
+                result.setData(list);
+                mo.setText("获取失败,权限不足！");
+                result.setMsg(mo);
+                result.setSuccess(false);
+                return result;
+            } else if (role == 1) {
+                list = reportService.getReportByContent(contact, depart_0, campus_0);
+            } else if (role == 2 || role == 3) {
+                list = reportService.getReportByContentAndCampus(contact, depart, campus);
+            }
+
+        }catch (Exception e)
+        {
+            mo.setText("获取失败！");
+
             result.setMsg(mo);
             result.setSuccess(false);
+            result.setData(list);
             return result;
-        } else if (role == 1) {
-            list = reportService.getReportByContent(contact, depart_0, campus_0);
-        } else if (role == 2 || role == 3) {
-            list = reportService.getReportByContentAndCampus(contact, depart, campus);
         }
-        if (!list.isEmpty()) {
+        //if (!list.isEmpty()) {
 
 
             result.setData(list);
@@ -223,16 +238,12 @@ public class ReportController {
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-        }
+   //     }
 
-        result.setData(list);
+
 //        jResult.setData(jData);
 
-        mo.setText("获取失败！");
 
-        result.setMsg(mo);
-        result.setSuccess(false);
-        return result;
 
 
     }
@@ -258,13 +269,18 @@ public class ReportController {
 //        }
         //TODO:权限控制
         boolean success=false;
-        if (rDate.getReport_stat().equals("close")) {
 
-             success = reportService.setStatusClose(rDate.getReport_stat());
-        } else {
 
-             success = reportService.setStatus(rDate);
-        }
+            if (rDate.getReport_stat().equals("close")) {
+
+                success = reportService.setStatusClose(rDate.getReport_stat());
+            } else {
+
+                success = reportService.setStatus(rDate);
+            }
+
+
+
 
         if (success) {
 
@@ -275,12 +291,12 @@ public class ReportController {
             rResult.setSuccess(true);
             return rResult;
         }
-
         mo.setText("修改失败！");
         mo.setLogin(true);
         rResult.setMsg(mo);
         rResult.setSuccess(false);
         return rResult;
+
 
     }
 
@@ -310,9 +326,13 @@ public class ReportController {
 //            rResult.getMsg().setText("用户已注销");
 //            return rResult;
 //        }
+        boolean success;
 
-        boolean success = reportService.setReport(uid1,content,suggestion);
+//        try {
+             success = reportService.setReport(uid1, content, suggestion);
+//        }catch (Exception e){
 
+//        }
 
 
         if (success){
@@ -324,13 +344,14 @@ public class ReportController {
             rResult.setMsg(mo);
             rResult.setSuccess(true);
             return rResult;
-        }
-
+       }
         mo.setText("汇报失败！");
         mo.setLogin(true);
         rResult.setMsg(mo);
         rResult.setSuccess(false);
         return rResult;
+
+
 
     }
 
@@ -361,9 +382,12 @@ public class ReportController {
 //            result.getMsg().setText("用户已注销");
 //            return result;
 //        }
+        boolean success;
+//        try {
+             success = reportService.setReportByAdmin(id, comment, rate, salary_sug, salary);
+//        }catch (Exception e){
 
-        boolean success = reportService.setReportByAdmin(id,comment,rate,salary_sug,salary);
-
+//        }
 
 
         if (success){
@@ -380,6 +404,7 @@ public class ReportController {
         result.setMsg(mo);
         result.setSuccess(false);
         return result;
+
 
     }
 
@@ -406,8 +431,6 @@ public class ReportController {
         } else if (role == 1) {
             //只能获取本部门的
           list =  reportService.getReportExcel(depart1,campus_0,start_date,end_date);
-
-
         } else if (role == 2 || role == 3) {
             list =  reportService.getReportAllExcel(start_date,end_date);
         }

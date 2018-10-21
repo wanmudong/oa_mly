@@ -78,24 +78,36 @@ public class RecruitController {
         Integer role =Integer.valueOf( sysuser.getRole());
         String campus_0 = sysuser.getCampus();
 
-        /**
-         * 根据权限进行不同的招新查询
-         */
-        //TODO:利用动态sql减少系统的逻辑处理
-        if (role==0){
-            jData.setData(list);
-            mo.setText("获取失败,权限不足！");
+        try {
+            /**
+             * 根据权限进行不同的招新查询
+             */
+            //TODO:利用动态sql减少系统的逻辑处理
+            if (role == 0) {
+                jData.setData(list);
+                mo.setText("获取失败,权限不足！");
+                jResult.setMsg(mo);
+                jResult.setSuccess(false);
+                return jResult;
+            } else if (role == 1) {
+                list = recruitService.getRecruitByContent(content, depart_0, campus_0);
+            } else if (role == 2 || role == 3) {
+
+                list = recruitService.getRecruitByContentAndCampus(content, depart, campus);
+            }
+
+        }catch (Exception e){
+            jData.setData(jUserList);
+            jResult.setData(jData);
+
+            mo.setText("获取失败！");
+
             jResult.setMsg(mo);
             jResult.setSuccess(false);
             return jResult;
-        }else if (role==1){
-            list =  recruitService.getRecruitByContent(content,depart_0,campus_0);
-        }else  if (role==2 || role==3){
-
-            list =  recruitService.getRecruitByContentAndCampus(content,depart,campus);
         }
-        if (!list.isEmpty())
-        {
+      //  if (!list.isEmpty())
+     //   {
 
             for (Recruit recruit : list) {
                 JUser jUser = mapperUser.mapperJUser(recruit, dictDao);
@@ -108,16 +120,9 @@ public class RecruitController {
             jResult.setMsg(mo);
             jResult.setSuccess(true);
             return jResult;
-        }
+   //     }
 
-        jData.setData(jUserList);
-        jResult.setData(jData);
 
-        mo.setText("获取失败！");
-
-        jResult.setMsg(mo);
-        jResult.setSuccess(false);
-        return jResult;
     }
 
 
@@ -147,9 +152,11 @@ public class RecruitController {
 //            rResult.getMsg().setText("用户已注销");
 //            return rResult;
 //        }
+        Recruit recruit = new Recruit();
+
+            recruit = recruitService.update(id, status, desc, depart);
 
 
-        Recruit recruit = recruitService.update(id,status,desc,depart);
         if (recruit != null)
         {
 
@@ -162,11 +169,13 @@ public class RecruitController {
             rResult.setSuccess(true);
             return rResult;
         }
-
         mo.setText("更新失败！");
         rResult.setMsg(mo);
         rResult.setSuccess(false);
         return rResult;
+
+
+
     }
 
 //    /**
@@ -223,8 +232,11 @@ public class RecruitController {
 //            rResult.getMsg().setText("用户已注销");
 //            return rResult;
 //        }
+        Recruit recruit = new Recruit();
 
-       Recruit recruit =  recruitService.getRecruitById(id);
+            recruit  = recruitService.getRecruitById(id);
+
+
 
         if (recruit != null) {
 
@@ -241,6 +253,7 @@ public class RecruitController {
         rResult.setSuccess(false);
 
         return rResult;
+
 
 
     }
@@ -290,6 +303,7 @@ public class RecruitController {
            RRecruit rRecruit = mapperUser.mapperRRecruit(recruit,dictDao);
            list1.add(rRecruit);
         }
+
         if (list1!=null) {
             //工作簿
             XSSFWorkbook workbook = new XSSFWorkbook();

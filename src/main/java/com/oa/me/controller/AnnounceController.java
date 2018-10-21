@@ -55,20 +55,22 @@ public class AnnounceController {
         try {
             list = announceService.getAnnounceModel();
         }catch (Exception e){
-            result.setSuccess(true);
-            mo.setText("请求成功！");
 
-            result.setMsg(mo);
-            result.setData(list);
-
-            return result;
-        }
-//        if (list.isEmpty()) {
             result.setSuccess(false);
             mo.setText("请求失败！");
 
             result.setMsg(mo);
             return result;
+
+        }
+//        if (list.isEmpty()) {
+        result.setSuccess(true);
+        mo.setText("请求成功！");
+
+        result.setMsg(mo);
+        result.setData(list);
+
+        return result;
 //        }
 
 

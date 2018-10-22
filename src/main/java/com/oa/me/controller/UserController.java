@@ -259,7 +259,7 @@ public class UserController {
      */
     @GetMapping("/api/getUserByStuid")
     @ResponseBody
-    public Result getNowUser() {
+    public Result getNowUser(String stuid) {
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
@@ -276,11 +276,14 @@ public class UserController {
         User user=new User();
         Map<String, List<Dict>> dict = new HashMap<>();
         try {
-            String stuid = sysuser.getUsername();
+            if (stuid == null ||stuid.equals("")){
+                 stuid = sysuser.getUsername();
+            }
              user = userService.getUserByStuid(stuid);
             dict = dictService.getAllDict();
         } catch (Exception e)
         {
+            System.out.println(e.fillInStackTrace());
             mo.setText("获取失败！");
             result.setMsg(mo);
             result.setSuccess(false);

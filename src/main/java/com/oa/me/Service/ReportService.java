@@ -32,7 +32,7 @@ public interface ReportService {
      * @param campus_0
      * @return
      */
-    List getReportByContent(String contact, String depart_0, String campus_0);
+    List getReportByContent(String contact, String depart_0, String campus_0,String work_start_date);
 
     /**
      * 以主管权限获取汇报信息
@@ -41,7 +41,7 @@ public interface ReportService {
      * @param campus
      * @return
      */
-    List getReportByContentAndCampus(String contact, String depart, String campus);
+    List getReportByContentAndCampus(String contact, String depart, String campus,String work_start_date);
 
     /**
      * 修改汇报状态

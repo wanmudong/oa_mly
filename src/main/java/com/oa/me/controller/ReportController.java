@@ -175,7 +175,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("")
-    public Result getReportsbByContact(String campus, String contact, String depart) {
+    public Result getReportsbByContact(String campus, String contact, String depart,String work_start_date) {
 
         Result result = new Result();
         Message_oa mo = new Message_oa();
@@ -207,17 +207,16 @@ public class ReportController {
         String campus_0 = sysuser.getCampus();
 
         try {
-
             if (role == 0) {
                 result.setData(list);
                 mo.setText("获取失败,权限不足！");
                 result.setMsg(mo);
-                result.setSuccess(false);
+                result.setSuccess(true);
                 return result;
             } else if (role == 1) {
-                list = reportService.getReportByContent(contact, depart_0, campus_0);
+                list = reportService.getReportByContent(contact, depart_0, campus_0,work_start_date);
             } else if (role == 2 || role == 3) {
-                list = reportService.getReportByContentAndCampus(contact, depart, campus);
+                list = reportService.getReportByContentAndCampus(contact, depart, campus,work_start_date);
             }
 
         }catch (Exception e)

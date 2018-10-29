@@ -20,25 +20,36 @@
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
-<insert id="insertArticle">
-    insert into article(
-    title,
-    summary,
-    content,
-    author,
-    weight,
-    copy_from,
-    cover,
-    `read`,
-    username)
-    values
-    (#{title},#{summary},#{content},#{author},#{weight},#{copyFrom},#{cover},#{read},#{username})
+    <insert id="insertArticle">
+        insert into article(
+        title,
+        summary,
+        content,
+        author,
+        weight,
+        copy_from,
+        cover,
+        `read`,
+        username,
+        publish_time)
+        values
+        (#{title},#{summary},#{content},#{author},#{weight},#{copyFrom},#{cover},#{read},#{username},#{publishTime})
 
-</insert>
+    </insert>
 
     <select id="queryArticleByTitle" resultType="Article" >
         SELECT
            *
+        FROM article
+       where title=#{title}
+    </select>
+
+    <select id="queryArticleByUsername" resultType="Article" >
+        SELECT
+           title,
+           summary,
+           comment,
+           publish_time
         FROM article
        where title=#{title}
     </select>
@@ -59,7 +70,7 @@
             `read`,
             username
         FROM article
-       where upload_state=0
+       where upload_state=0 and state =3
     </select>
 
     <update id="updateUpload">
@@ -70,8 +81,48 @@
     </update>
 
 
+    <select id="queryListByTags"  resultType="Article">
+        SELECT
+            id,
+            title,
+            state,
+            weight,
+            `read`,
+            username,
+            create_time AS createTime
+        FROM article where id in (
+                        SELECT
+                            article.id
+                        FROM
+                            article
+                        WHERE
+                            NOT EXISTS (
+                        SELECT
+                            *
+                        FROM
+                            tags
+                        WHERE    tags.tag_id in (${tags}) and
+                            NOT EXISTS ( SELECT * FROM article_tag  WHERE article_tag.article_id = article.id AND article_tag.tag_id = tags.tag_id   )
+                            )
+                )and state &lt;  3
+        ORDER BY create_time DESC
+    </select>
 
     <select id="queryList"  resultType="Article">
+        SELECT
+            id,
+            title,
+            state,
+            weight,
+            `read`,
+            username,
+            create_time AS createTime
+        FROM article where state &lt;  3
+        ORDER BY create_time DESC
+    </select>
+
+
+    <select id="queryArticleByUsername"  resultType="Article" >
         SELECT
             id,
             title,
@@ -89,8 +140,14 @@
             title,
             summary,
             content,
+            comment,
+            author,
+            state,
+            weight,
             copy_from    AS copyFrom,
-            publish_time AS publishTime
+            cover,
+            `read`,
+            username
         FROM article
         WHERE id = #{id}
     </select>

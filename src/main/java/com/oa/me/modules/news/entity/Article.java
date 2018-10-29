@@ -1,5 +1,6 @@
 package com.oa.me.modules.news.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -44,17 +45,12 @@ public class Article implements Serializable {
 	 */
 	private String content;
 	/**
-	 * 审核
-	 */
-	@JsonProperty("comment")
-	private String comment;
-	/**
 	 * 作者
 	 */
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String author;
 	/**
-	 * 状态：0-未审核，1-审核未通过，2-审核通过，3-优秀
+	 * 状态：0->未审核；1->审核未通过未修改;2->审核未通过已修改;3->审核已通过
 	 */
 	private Integer state;
 	/**
@@ -78,9 +74,9 @@ public class Article implements Serializable {
 	 */
 	private String username;
 	/**
-	 * 文章未通过的理由
+	 * 审核文章
 	 */
-	private String reason;
+	private String comment;
 	/**
 	 * 文章上显示的时间
 	 */
@@ -97,6 +93,7 @@ public class Article implements Serializable {
 	/**
 	 * 标签数组
 	 */
+	@TableField(exist = false)
 	private Integer[] tagIdList;
 
 

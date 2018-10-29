@@ -45,4 +45,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         }
         return true;
     }
+
+    @Override
+    public List<Tag> getTags() {
+        List<Tag> tags = baseMapper.queryTags();
+        return tags;
+    }
 }

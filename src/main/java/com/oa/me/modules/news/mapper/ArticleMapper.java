@@ -4,6 +4,7 @@ package com.oa.me.modules.news.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.github.pagehelper.Page;
 import com.oa.me.modules.news.entity.Article;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,8 +27,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param page 翻页对象，可以作为 xml 参数直接使用，传递参数 Page 即自动分页
      * @param title
      */
-    List<Article> queryList(Pagination page);
+    Page<Article> queryList();
 
+    Page<Article>queryListByTags(@Param("tags") String tags);
 
     Article queryDetail(@Param("id") Long id);
 
@@ -42,6 +44,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<Article> queryArticleUpload();
 
     Integer updateUpload(@Param("id") Long id);
+
+    Page<Article> queryArticleByUsername();
 
 
 

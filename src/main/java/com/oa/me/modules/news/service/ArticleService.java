@@ -2,8 +2,10 @@ package com.oa.me.modules.news.service;
 
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
-import com.oa.me.modules.common.utils.PageInfo;
+import com.github.pagehelper.PageInfo;
+import com.oa.me.modules.common.utils.MyPageInfo;
 import com.oa.me.modules.news.entity.Article;
 
 import java.util.Map;
@@ -18,12 +20,12 @@ public interface ArticleService extends IService<Article> {
 
 
 
-    PageInfo queryPage(Map<String, Object> params);
+    MyPageInfo queryPage(String tags);
 
     Article getDetail(Long id);
 
 
-    PageInfo<Map<String,Object>> getIdAndTitle(Integer pageNum, Integer pageSize, Integer catalogId);
+    MyPageInfo<Map<String,Object>> getIdAndTitle(Integer pageNum, Integer pageSize, Integer catalogId);
 
     void auditArticle(Long id, String commment);
 
@@ -32,5 +34,7 @@ public interface ArticleService extends IService<Article> {
     Boolean insertArticle(String json);
 
     String uploadArticle();
+
+    MyPageInfo<Article> getHistory(String username);
 }
 

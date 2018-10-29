@@ -10,10 +10,14 @@ import com.oa.me.modules.news.entity.Tag;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface TagMapper extends BaseMapper<Tag> {
 
 
     Integer insertTags(Tag tag);
+
+    List<Tag> queryTags();
 
 }

@@ -276,19 +276,12 @@ public class UserController {
         Message_oa mo = new Message_oa();
         mo.setLogin(true);
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-//        if (sysuser == null) {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        } else {
-//            mo.setLogin(true);
-//        }
+
         User user=new User();
         Map<String, List<Dict>> dict = new HashMap<>();
         try {
             if (stuid == null ||stuid.equals("")){
-//                 stuid = sysuser.getUsername();
+                stuid = sysuser.getUsername();
             }
              user = userService.getUserByStuid(stuid);
             dict = dictService.getAllDict();

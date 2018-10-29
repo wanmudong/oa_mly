@@ -1,12 +1,10 @@
 package com.oa.me.modules.news.service.impl;
 
-import com.baomidou.mybatisplus.plugins.Page;
-
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.oa.me.modules.common.utils.JsonMapper;
-import com.oa.me.modules.common.utils.PageInfo;
-import com.oa.me.modules.common.utils.PageQuery;
+import com.oa.me.modules.common.utils.MyPageInfo;
 import com.oa.me.modules.news.entity.Article;
 import com.oa.me.modules.news.entity.ArticleTag;
 import com.oa.me.modules.news.entity.ResultTags;
@@ -14,16 +12,12 @@ import com.oa.me.modules.news.mapper.ArticleMapper;
 import com.oa.me.modules.news.mapper.ArticleTagMapper;
 import com.oa.me.modules.news.service.ArticleService;
 import com.oa.me.modules.news.service.ArticleTagService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service("articleService")
@@ -36,22 +30,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleTagMapper articleTagMapper;
 
     @Override
-    public PageInfo queryPage(Map<String, Object> params) {
-//        String title = (String)params.get("title");
-//        if (StringUtils.isBlank(title)){
-//            title=null;
-//        }else{
-//            title="%"+title;
-//        }
+    public MyPageInfo queryPage(String tags) {
 
+        if (tags==null||"".equals(tags))
+        {
+            PageInfo<Article> pageInfo = new PageInfo<>(baseMapper.queryList());
+            return new MyPageInfo<>(pageInfo);
+        }
+        String[] tagArray = tags.split(",");
+        PageInfo<Article> pageInfo = new PageInfo<>(baseMapper.queryListByTags(tags));
+        return new MyPageInfo<>(pageInfo);
 
-        Page<Article> page=new PageQuery<Article>(params).getPageParam();
-//        Map<String,Object> map=new HashMap<>();
-//        map.put("page",page);
-//        map.put("title",title);
-        page.setOrderByField(null);
-        page.setRecords(this.baseMapper.queryList(page));
-        return new PageInfo<>(page);
     }
 
     @Override
@@ -60,11 +49,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
 
-    @Override
-    public PageInfo<Map<String, Object>> getIdAndTitle(Integer pageNum, Integer pageSize, Integer catalogId) {
-        Page<Map<String, Object>> page=new Page<>(pageNum,pageSize);
-        page.setRecords(baseMapper.queryIdAndTitle(page,catalogId));
-        return new PageInfo<>(page);
+   @Override
+  public MyPageInfo<Map<String, Object>> getIdAndTitle(Integer pageNum, Integer pageSize, Integer catalogId) {
+//        Page<Map<String, Object>> page=new Page<>(pageNum,pageSize);
+//        page.setRecords(baseMapper.queryIdAndTitle(page,catalogId));
+//        return new MyPageInfo<>(page);
+       return  null;
     }
 
     @Override
@@ -83,13 +73,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         Article article = JsonMapper.fromJson(json,Article.class);
 
+        article.setPublishTime(new Date(article.getPublishTime().getTime()*1000));
+
+
         Integer success = baseMapper.insertArticle(article);
 
         Article article1 = baseMapper.queryArticleByTitle(article.getTitle());
 
         //添加到article_tags
         Integer[] tagList = article.getTagIdList();
-        System.out.println(tagList);
+
         for (int i=0;i<=tagList.length-1;i++){
             ArticleTag at = new ArticleTag();
             at.setArticleId(article1.getId());
@@ -113,9 +106,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String url6 = "http://www.chenliangliang.xin/mly/open/api/news";
 
         List<Article> list = baseMapper.queryArticleUpload();
-        if (list==null){
-            return "success";
-        }
+        if (list==null){ return "success"; }
         List<String> list_json =new ArrayList<>();
 
         for (Article article:list) {
@@ -143,6 +134,37 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         }
         return "success";
+    }
+
+    @Override
+    public MyPageInfo<Article> getHistory(String username) {
+//
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("username",username);
+//
+//        Page<Article> page=new PageQuery<Article>(params).getPageParam();
+//
+//
+//        page.setOrderByField(null);
+//        page.setRecords(this.baseMapper.queryList(page));
+//
+//        return new MyPageInfo<>(page);
+
+//        List<Article> list = baseMapper.selectList(
+//                new EntityWrapper<Article>().eq("username",username)
+//        );
+//
+//
+//        List<Article> userList = baseMapper.selectPage(
+//                new Page<Article>(2, 3),
+//                new EntityWrapper<Article>().eq("username", username)
+//        );
+//        System.out.println(userList);
+//        page.setRecords(userList);
+
+        PageInfo<Article> pageInfo = new PageInfo<>(baseMapper.queryArticleByUsername());
+        return new MyPageInfo<>(pageInfo);
+
     }
 
 }

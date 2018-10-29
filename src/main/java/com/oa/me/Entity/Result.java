@@ -34,4 +34,6 @@ public class Result<T> {
     private JCondition conditions;
 
 
+
+
 }

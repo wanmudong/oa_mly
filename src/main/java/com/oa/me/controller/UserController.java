@@ -1,11 +1,14 @@
 package com.oa.me.controller;
 
-
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.oa.me.Dao.DepartDao;
 import com.oa.me.Dao.DictDao;
 import com.oa.me.Dao.UserDao;
 import com.oa.me.Entity.*;
 import com.oa.me.Dao.DtoConvert;
+import com.oa.me.MeApplication;
 import com.oa.me.Service.DictService;
 import com.oa.me.Service.UserService;
 import com.oa.me.domain.*;
@@ -17,16 +20,15 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +46,7 @@ import static com.oa.me.utils.timeUtil.getSecondTimeNow;
 /**
  * Created by chenjiehao on 2018/9/17
  */
+@Slf4j
 @Controller
 @EnableAutoConfiguration
 public class UserController {
@@ -60,7 +63,6 @@ public class UserController {
     private DepartDao departDao;
     @Resource
     private DictDao dictDao;
-
 
     /**
      * 测试token
@@ -119,28 +121,37 @@ public class UserController {
         try {
             subject.login(token);
         } catch (UnknownAccountException uae) {
-//            log.info("对用户[{}]进行登录验证..验证未通过,未知账户", username);
-            result.getMsg().setText("未知账户");
+            log.info("对用户[{}]进行登录验证..验证未通过,未知账户", username);
+//            log.info("错误轨迹",uae);
+            result.setSuccess(false);
+            mo.setText("未知账户");
+            result.setMsg(mo);
             return result;
         } catch (IncorrectCredentialsException ice) {
-//            log.info("对用户[{}]进行登录验证..验证未通过,错误的凭证", username);
+            log.info("对用户[{}]进行登录验证..验证未通过,错误的凭证", username);
             result.setSuccess(false);
             mo.setText("密码错误");
             result.setMsg(mo);
             return result;
         } catch (LockedAccountException lae) {
-//            log.info("对用户[{}]进行登录验证..验证未通过,账户已锁定", username);
-            result.getMsg().setText("账户已锁定");
+            log.info("对用户[{}]进行登录验证..验证未通过,账户已锁定", username);
+            result.setSuccess(false);
+            mo.setText("账户已锁定");
+            result.setMsg(mo);
             return result;
         } catch (ExcessiveAttemptsException eae) {
-//            log.info("对用户[{}]进行登录验证..验证未通过,错误次数过多", username);
-            result.getMsg().setText("错误次数过多");
+            log.info("对用户[{}]进行登录验证..验证未通过,错误次数过多", username);
+            result.setSuccess(false);
+            mo.setText("错误次数过多");
+            result.setMsg(mo);
             return result;
         } catch (AuthenticationException ae) {
             //通过处理Shiro的运行时AuthenticationException就可以控制用户登录失败或密码错误时的情景
-//            log.info("对用户[{}]进行登录验证..验证未通过,堆栈轨迹如下", username);
-            result.getMsg().setText("登录失败或密码错误");
-            ae.printStackTrace();
+            log.info("对用户[{}]进行登录验证..验证未通过,堆栈轨迹如下", username);
+            log.info("堆栈轨迹",ae);
+            result.setSuccess(false);
+            mo.setText("登录失败或密码错误");
+            result.setMsg(mo);
             return result;
         }
         System.out.println("----------");
@@ -277,7 +288,7 @@ public class UserController {
         Map<String, List<Dict>> dict = new HashMap<>();
         try {
             if (stuid == null ||stuid.equals("")){
-                 stuid = sysuser.getUsername();
+//                 stuid = sysuser.getUsername();
             }
              user = userService.getUserByStuid(stuid);
             dict = dictService.getAllDict();

@@ -32,6 +32,11 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
+        /**
+         * 无权限跳转的url
+         */
+        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
+
         //自定义拦截器
         Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
         filtersMap.put("loginoutfilter", new AuthFilter());
@@ -59,7 +64,7 @@ public class ShiroConfig {
        filterChainDefinitionMap.put("/api/recruit/**", "loginoutfilter");
        filterChainDefinitionMap.put("/api/report/**", "loginoutfilter");
        filterChainDefinitionMap.put("/api/getAllUser", "loginoutfilter");
-       filterChainDefinitionMap.put("/api/getUserInfoByStuid", "loginoutfilter");
+//       filterChainDefinitionMap.put("/api/getUserInfoByStuid", "loginoutfilter");
        filterChainDefinitionMap.put("/api/member/**", "loginoutfilter");
        filterChainDefinitionMap.put("/api/me/**", "loginoutfilter");
         filterChainDefinitionMap.put("/**", "anon");

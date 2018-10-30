@@ -1,46 +1,37 @@
 package com.oa.me.Entity;
 
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * Created by chenjiehao on 2018/9/17
  */
+@Data
 public class Result<T> {
+    /**
+     *  返回给前端界面的实体
+     */
+    /**
+     * 请求是否成功
+     */
     private boolean success;
+
+    /**
+     * 请求的信息
+     */
     private Message_oa msg;
+
+    /**
+     * 请求的信息
+     */
     private List<T>   data;
+
+    /**
+     * 请求的条件
+     */
     private JCondition conditions;
 
-    public JCondition getConditions() {
-        return conditions;
-    }
 
-    public void setConditions(JCondition conditions) {
-        this.conditions = conditions;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public Message_oa getMsg() {
-        return msg;
-    }
-
-    public void setMsg(Message_oa msg) {
-        this.msg = msg;
-    }
-
-    public List<T> getData() {
-        return data;
-    }
-
-    public void setData(List<T> data) {
-        this.data = data;
-    }
 }

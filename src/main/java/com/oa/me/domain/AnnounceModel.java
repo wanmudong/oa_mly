@@ -1,8 +1,11 @@
 package com.oa.me.domain;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/18
  */
+@Data
 public class AnnounceModel {
     /**
      * 用于和前端交互的通知实体

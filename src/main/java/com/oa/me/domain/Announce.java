@@ -1,11 +1,15 @@
 package com.oa.me.domain;
 
+
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/18
  */
+@Data
 public class Announce {
     /**
-     * 用于和数据库交互的通知实体
+     * 用于和数据库交互的通知的实体
      */
     private int id;
     private String title;

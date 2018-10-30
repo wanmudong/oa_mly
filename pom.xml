@@ -184,6 +184,7 @@
     </dependencies>
 
     <build>
+        <finalName>oa_mly_online_1.0.1</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

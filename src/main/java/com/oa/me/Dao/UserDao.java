@@ -34,10 +34,10 @@ public interface UserDao {
 
 
     /**
-     * 获取所有用户
+     * 获取用户列表
      * @return
      */
-    @Select("select id,stuid,name,sex,depart,debitcard,role,status,join_time,exit_time,phone,email,qq,campus,college,major from oa_member")
+    @Select("select id,stuid,name,sex,depart,debitcard,role,status,join_time,exit_time,phone,email,qq,campus,college,major from oa_member order by id")
     List<User> getAllUser();
 
     /**
@@ -70,7 +70,11 @@ public interface UserDao {
     })
     SysUser findSysUserByUsername(String username);
 
-
+    /**
+     * 获取用户名对应的角色列表
+     * @param username
+     * @return
+     */
     @Select("select * from sys_role where id in (select role_id from sys_member_role where stuid=#{username})")
     @Results({
             @Result(property = "id",  column = "id"),
@@ -79,24 +83,23 @@ public interface UserDao {
     })
     SysRole getSysUserRoleList(String username);
 
-
+    /**
+     * 通过通过content获取成员信息列表
+     * @param content
+     * @return
+     */
     @Select("select * from oa_member where " +
-//            "id  like '%${anything}%' or " +
             "(stuid  like '%${content}%' or " +
             "name  like '%${content}%' or " +
-//            "sex  like '%${anything}%' or " +
-//            "depart like '%${anything}%' or " +
-//            "debitcard  like '%${anything}%' or " +
-//            "email  like '%${anything}%' or " +
-//            "qq  like '%${anything}%' or " +
-//            "college  like '%${anything}%' or " +
-//            "campus  like '%${anything}%' or " +
-//            "major  like '%${anything}%'
             "phone  like '%${content}%') and status=1  "
                 )
     List<User> getUserByContent(@Param("content") String content);
 
-
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
     @Update("update oa_member set name=#{name}," +
             "depart=#{depart}," +
             "phone=#{phone}," +
@@ -107,14 +110,13 @@ public interface UserDao {
             "debitcard=#{debitcard}," +
             "pwd=#{pwd}," +
             "email=#{email} where stuid = #{stuid} ")
-//    @Results({
-//            @Result(property = "c",  column = "debitcard"),
-//            @Result(property = "name", column = "name"),
-//            @Result(property = "remark", column = "remark")
-//    })
     long updateMember(User user);
 
-
+    /**
+     * 通过部门获取成员列表
+     * @param depart
+     * @return
+     */
     @Select("select * from oa_member where depart =#{depart} and status=1")
     List<User> getUserListByDepart(@Param("depart") String depart);
 
@@ -134,6 +136,13 @@ public interface UserDao {
 //    )
 //    List<User> getUserByContent(@Param("content") String content,@Param("depart") String depart);
 
+    /**
+     * 通过campus，depart，content获取成员列表
+     * @param content
+     * @param depart
+     * @param campus
+     * @return
+     */
     @Select("select * from oa_member where( " +
 //            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
@@ -152,7 +161,12 @@ public interface UserDao {
 
 //    List<User> getUserByContentAndAllCircle(String content, int depart);
 
-
+    /**
+     * 通过depart，content获取成员列表
+     * @param content
+     * @param depart
+     * @return
+     */
     @Select("select * from oa_member where( " +
 //            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
@@ -169,6 +183,12 @@ public interface UserDao {
     )
     List<User> getUserByContentByDepart(@Param("content") String content,@Param("depart") int depart);
 
+    /**
+     * 通过campus，content获取成员列表
+     * @param content
+     * @param campus
+     * @return
+     */
     @Select("select * from oa_member where( " +
 //            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
@@ -185,7 +205,14 @@ public interface UserDao {
     )
     List<User> getUserByContentByCampus(@Param("content") String content,@Param("campus") String campus);
 
-
+    /**
+     * 插入一条新成员数据
+     * @param recruit
+     * @param pwd
+     * @param salt
+     * @param time
+     * @return
+     */
     @Insert("insert into oa_member (stuid,name,sex,depart,role,pwd,salt,status,join_time,phone,qq,campus,college,major) values(#{recruit.stuid}," +
             "#{recruit.name}," +
             "#{recruit.sex}," +
@@ -202,28 +229,64 @@ public interface UserDao {
             "#{recruit.major})" )
     long InsertNewMember(@Param("recruit")Recruit recruit,@Param("pwd")String pwd,@Param("salt")String salt,@Param("time")int time);
 
-
+    /**
+     * 查询成员的部门
+     * @param uid
+     * @return
+     */
     @Select("select dict_item_name from oa_member as om ,oa_dict_depart as od where om.id=#{uid} and om.depart=od.dict_id")
     String getDepartByUid(@Param("uid") int uid);
 
-
+    /**
+     * 通过uid查询成员的名称
+     * @param uid
+     * @return
+     */
     @Select("select name from oa_member where id = #{uid}")
     String getNameByUid(@Param("uid") int uid);
 
-
+    /**
+     * 更新用户的密码
+     * @param uid
+     * @param newPwd
+     * @return
+     */
     @Update("update oa_member set pwd=#{newPwd} where id=#{uid}")
     long setPwd(@Param("uid") int uid,@Param("newPwd") String newPwd);
 
-
+    /**
+     * 更新用户的qq号
+     * @param stuid
+     * @param qq
+     * @return
+     */
     @Update("update oa_member set qq=#{qq} where stuid=#{stuid}")
     long setQqByStuid(@Param("stuid")String stuid,@Param("qq") String qq);
 
+    /**
+     * 更新用户的email
+     * @param stuid
+     * @param email
+     * @return
+     */
     @Update("update oa_member set email=#{email} where stuid=#{stuid}")
     long setEmailByStuid(@Param("stuid")String stuid, @Param("email")String email);
 
+    /**
+     * 更新用户的phone
+     * @param stuid
+     * @param phone
+     * @return
+     */
     @Update("update oa_member set phone=#{phone} where stuid=#{stuid}")
     long setPhoneByStuid(@Param("stuid")String stuid,@Param("phone") String phone);
 
+    /**
+     * 更新用户的debitcard（银行卡）
+     * @param stuid
+     * @param debitcard
+     * @return
+     */
     @Update("update oa_member set debitcard=#{debitcard} where stuid=#{stuid}")
     long setDebitcardByStuid(@Param("stuid")String stuid, @Param("debitcard")String debitcard);
 }

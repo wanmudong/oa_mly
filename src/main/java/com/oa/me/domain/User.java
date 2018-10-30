@@ -1,28 +1,52 @@
 package com.oa.me.domain;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/17
  */
+@Data
 public class User {
-    //用于和数据库交互的用户实体
+    /**
+     *     用于和数据库交互的成员的实体
+     */
+
+    //成员id
     private int id;
+    //学号
     private int stuid;
+    //姓名
     private String  name;
+    //性别
     private String  sex;
+    //密码
     private String  pwd;
+    //盐值
     private String  salt;
+    //部门
     private int depart;
+    //银行卡
     private String debitcard;
+    //角色
     private int role;
    // private String avatar_url;
+    //状态
     private int status;
+    //加入时间
     private  int join_time;
+    //退出时间
     private int exit_time;
+    //电话
     private  String phone;
+    //邮箱
     private String email;
+    //qq号
     private String qq;
+    //校区
     private int campus;
+    //学院
     private String college;
+    //专业
     private String major;
 
 

@@ -1,10 +1,16 @@
 package com.oa.me.domain;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/24
  */
+@Data
 public class JUser {
-    //用于和前端交互的用户实体
+    /**
+     *  用于和前端交互的用户的实体
+     */
+
     private int key;
     private int stuid;
     private String  name;

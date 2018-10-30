@@ -4,15 +4,29 @@ package com.oa.me.domain;
  * Created by chenjiehao on 2018/9/18
  */
 public class UserOa {
-//id,avatar_url,stuid,name,depart,role
     /**
-     * 返回给前端的用户实体
+     * 返回给前端的用户的实体
+     */
+
+    /**
+     * 成员id
      */
     private int id;
-//    private String avatar;
+    /**
+     * 成员学号
+     */
     private int stuid;
+    /**
+     * 成员名称
+     */
     private String name;
+    /**
+     * 部门
+     */
     private int depart;
+    /**
+     * 角色
+     */
     private int role;
 
     public int getId() {

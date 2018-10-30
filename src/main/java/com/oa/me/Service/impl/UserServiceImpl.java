@@ -6,6 +6,7 @@ import com.oa.me.Entity.SysUser;
 import com.oa.me.Service.UserService;
 import com.oa.me.domain.*;
 import com.oa.me.utils.oa_md5;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -62,12 +63,14 @@ public class UserServiceImpl implements UserService {
         /**
          * 部长权限
          */
+
+        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+        String dep = sysuser.getDepart();
+
+
         List<User> userList = new ArrayList<User>();
         userList = userDao.getUserByContentAll(content, Integer.valueOf(depart), Integer.valueOf(campus));
-        for (User user : userList) {
-            user.setPwd("");
-            user.setSalt("");
-        }
+
         return userList;
     }
 
@@ -101,6 +104,9 @@ public class UserServiceImpl implements UserService {
          * circle 先不去管
          *
          */
+        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+        String dep = sysuser.getDepart();
+
         List<User> list = new ArrayList<User>();
         //TODO:动态sql语句（利用mybatis的xml方式）
         if (campus == null || campus.equals("")) {
@@ -124,6 +130,12 @@ public class UserServiceImpl implements UserService {
 
             }
         }
+        for (User user : list) {
+            if (!dep.equals("1")){
+                user.setDebitcard("");
+            }
+        }
+
         return list;
     }
 

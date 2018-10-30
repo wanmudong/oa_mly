@@ -362,8 +362,12 @@ public class UserController {
                 return jResult;
             } else if (role == 1) {
                 //部长只能获取本部门的
-                String campus_0 = sysuser.getCampus();
-                list = userService.getUserByContent(content, depart1, campus_0);
+                if (sysuser.getDepart().equals("1")){
+                    list = userService.getUserByContent(content, depart, period, campus);
+                }else {
+                    String campus_0 = sysuser.getCampus();
+                    list = userService.getUserByContent(content, depart1, campus_0);
+                }
 
             } else if (role == 2 || role == 3) {
                 //行政与主管可以根据条件获取

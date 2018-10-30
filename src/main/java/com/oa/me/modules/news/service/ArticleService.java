@@ -29,7 +29,7 @@ public interface ArticleService extends IService<Article> {
 
     void auditArticle(Long id, String commment);
 
-    Integer updateAudit(Long id, Long state, String comment);
+    Integer updateAudit(Long id, Long pass, String comment);
 
     Boolean insertArticle(String json);
 

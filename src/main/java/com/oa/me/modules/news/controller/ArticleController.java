@@ -99,11 +99,11 @@ public class ArticleController {
      * 审核文章
      */
     @PostMapping("/audit/{id}")
-    @RequiresPermissions("news:article:audit")
-    public Result audit(@PathVariable("id") Long id,  String comment,  Long state) {
+    //@RequiresPermissions("news:article:audit")
+    public Result audit(@PathVariable("id") Long id,  String comment,  Long pass) {
         Integer num;
         try {
-          num = articleService.updateAudit(id,state,comment);
+          num = articleService.updateAudit(id,pass,comment);
         }catch (Exception e)
         {
             log.info("审核({})失败",id);
@@ -124,8 +124,8 @@ public class ArticleController {
         try {
             articleService.insertArticle(json);
         }catch (Exception e){
-            log.info("标题已存在",e);
-            return Result.error("标题已存在");
+            log.info("提交数据有误",e);
+            return Result.error("提交数据有误");
         }
         return Result.OK();
     }
@@ -135,7 +135,7 @@ public class ArticleController {
      */
     @SysLog("修改文章")
     @PostMapping("/update")
-    @RequiresPermissions("news:article:update")
+  //  @RequiresPermissions("news:article:update")
     public Result update(@RequestBody Article article) {
             articleService.updateById(article);
         return Result.OK();

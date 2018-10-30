@@ -14,12 +14,15 @@ import com.oa.me.modules.news.service.ArticleService;
 import com.oa.me.modules.news.service.ArticleTagService;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
 
-
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.REPEATABLE_READ)
 @Service("articleService")
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
@@ -63,7 +66,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public Integer updateAudit(Long id, Long state, String comment) {
+    public Integer updateAudit(Long id, Long pass, String comment) {
+        Integer state = 1;
+        if (pass==1){
+            state=3;
+            }else if (pass==0){
+            state=1;
+        }
         Integer success =  baseMapper.updateAudit(id, state, comment);
         return success;
     }

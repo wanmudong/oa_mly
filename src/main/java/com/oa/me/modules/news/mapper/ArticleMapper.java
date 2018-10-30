@@ -37,7 +37,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     List<Map<String,Object>> queryIdAndTitle(Pagination page, @Param("catalogId") Integer catalogId);
 
-    Integer updateAudit(@Param("id") Long id,@Param("state") Long state,@Param("comment") String comment);
+    Integer updateAudit(@Param("id") Long id,@Param("state") Integer state,@Param("comment") String comment);
 
     Integer insertArticle(Article article);
 

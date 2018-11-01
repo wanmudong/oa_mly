@@ -51,13 +51,13 @@ public interface UserService {
 
     /**
      * 行政（主管）权限：根据部门，校区，内容获取用户列表
-     * @param content
-     * @param depart
-     * @param circle
-     * @param campus
-     * @return
      */
     public List<User> getUserByContent(String content, String depart, String circle, String campus);
+
+    /**
+     *超管
+     */
+    public List<User> getUserByContentAdmin(String content, String depart, String circle, String campus);
 
     /**
      * 个人修改自身信息

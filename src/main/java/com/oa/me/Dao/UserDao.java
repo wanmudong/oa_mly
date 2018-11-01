@@ -96,6 +96,16 @@ public interface UserDao {
     List<User> getUserByContent(@Param("content") String content);
 
     /**
+     * 通过通过content获取成员信息列表
+     */
+    @Select("select * from oa_member where " +
+            "(stuid  like '%${content}%' or " +
+            "name  like '%${content}%' or " +
+            "phone  like '%${content}%')  "
+    )
+    List<User> getUserByContentAdmin(@Param("content") String content);
+
+    /**
      * 更新用户
      * @param user
      * @return
@@ -144,22 +154,28 @@ public interface UserDao {
      * @return
      */
     @Select("select * from oa_member where( " +
-//            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
             "name  like '%${content}%' or " +
-//            "sex  like '%${anything}%' or " +
-//            "depart like '%${anything}%' or " +
-//            "debitcard  like '%${anything}%' or " +
-//            "email  like '%${anything}%' or " +
-//            "qq  like '%${anything}%' or " +
-//            "college  like '%${anything}%' or " +
-//            "campus  like '%${anything}%' or " +
-//            "major  like '%${anything}%'
             "phone  like '%${content}%') and (depart=#{depart} and campus=#{campus} and status = 1)  "
     )
     List<User> getUserByContentAll(@Param("content") String content,@Param("depart") int depart,@Param("campus") int campus);
 
-//    List<User> getUserByContentAndAllCircle(String content, int depart);
+
+    /**
+     * 通过campus，depart，content获取成员列表
+     * @param content
+     * @param depart
+     * @param campus
+     * @return
+     */
+    @Select("select * from oa_member where( " +
+            "stuid  like '%${content}%' or " +
+            "name  like '%${content}%' or " +
+            "phone  like '%${content}%') and (depart=#{depart} and campus=#{campus} )  "
+    )
+    List<User> getUserByContentAllAdmin(@Param("content") String content,@Param("depart") int depart,@Param("campus") int campus);
+
+
 
     /**
      * 通过depart，content获取成员列表
@@ -168,20 +184,24 @@ public interface UserDao {
      * @return
      */
     @Select("select * from oa_member where( " +
-//            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
             "name  like '%${content}%' or " +
-//            "sex  like '%${anything}%' or " +
-//            "depart like '%${anything}%' or " +
-//            "debitcard  like '%${anything}%' or " +
-//            "email  like '%${anything}%' or " +
-//            "qq  like '%${anything}%' or " +
-//            "college  like '%${anything}%' or " +
-//            "campus  like '%${anything}%' or " +
-//            "major  like '%${anything}%'
             "phone  like '%${content}%') and (depart=#{depart} and status=1)  "
     )
     List<User> getUserByContentByDepart(@Param("content") String content,@Param("depart") int depart);
+
+    /**
+     * 通过depart，content获取成员列表
+     * @param content
+     * @param depart
+     * @return
+     */
+    @Select("select * from oa_member where( " +
+            "stuid  like '%${content}%' or " +
+            "name  like '%${content}%' or " +
+            "phone  like '%${content}%') and (depart=#{depart} )  "
+    )
+    List<User> getUserByContentByDepartAdmin(@Param("content") String content,@Param("depart") int depart);
 
     /**
      * 通过campus，content获取成员列表
@@ -190,20 +210,24 @@ public interface UserDao {
      * @return
      */
     @Select("select * from oa_member where( " +
-//            "id  like '%${anything}%' or " +
             "stuid  like '%${content}%' or " +
             "name  like '%${content}%' or " +
-//            "sex  like '%${anything}%' or " +
-//            "depart like '%${anything}%' or " +
-//            "debitcard  like '%${anything}%' or " +
-//            "email  like '%${anything}%' or " +
-//            "qq  like '%${anything}%' or " +
-//            "college  like '%${anything}%' or " +
-//            "campus  like '%${anything}%' or " +
-//            "major  like '%${anything}%'
             "phone  like '%${content}%') and (campus=#{campus} and status=1)  "
     )
     List<User> getUserByContentByCampus(@Param("content") String content,@Param("campus") String campus);
+
+    /**
+     * 通过campus，content获取成员列表
+     * @param content
+     * @param campus
+     * @return
+     */
+    @Select("select * from oa_member where( " +
+            "stuid  like '%${content}%' or " +
+            "name  like '%${content}%' or " +
+            "phone  like '%${content}%') and (campus=#{campus} )  "
+    )
+    List<User> getUserByContentByCampusAdmin(@Param("content") String content,@Param("campus") String campus);
 
     /**
      * 插入一条新成员数据
@@ -289,4 +313,6 @@ public interface UserDao {
      */
     @Update("update oa_member set debitcard=#{debitcard} where stuid=#{stuid}")
     long setDebitcardByStuid(@Param("stuid")String stuid, @Param("debitcard")String debitcard);
+
+
 }

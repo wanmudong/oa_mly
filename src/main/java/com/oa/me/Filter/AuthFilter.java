@@ -35,7 +35,6 @@ public class AuthFilter implements Filter {
         HttpServletResponse response1 = (HttpServletResponse) response;
 
         if (isLogin) {
-
             chain.doFilter(request, response);
         } else {
 //            不存在则跳转到返回已注销的消息

@@ -97,6 +97,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         IShiro shiro = RealmKit.me();
 //      sysUser = shiro.getSysuser("2016214224");
         SysRole role = shiro.getSysUserRoleList(sysUser.getUsername());
+        System.out.println(role);
         authorizationInfo.addRole(role.getName());
             for(SysPermission p:shiro.getPermissions(role)){
                 authorizationInfo.addStringPermission(p.getPerms());

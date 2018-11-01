@@ -1,6 +1,7 @@
 package com.oa.me.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.oa.me.Dao.DepartDao;
@@ -66,9 +67,6 @@ public class UserController {
 
     /**
      * 测试token
-     * @param
-     * @return
-     * @throws Exception
      */
     @GetMapping("/api/test_token")
     @ResponseBody
@@ -90,9 +88,6 @@ public class UserController {
 
     /**
      * 用户登录的接口
-     * @param userModel
-     * @return
-     * @throws Exception
      */
     @PostMapping("/api/login")
     @ResponseBody
@@ -181,19 +176,54 @@ public class UserController {
 
     }
 
-    /**
-     * 用来获取所有存在于数据库的用户的接口
-     * @return
-     */
-    @GetMapping("/api/getAllUser")
-    @ResponseBody
-    public Result<User> getAllUser() {
-        Result result = new Result();
-        Message_oa mo = new Message_oa();
-        mo.setLogin(true);
-        List<User> list = userService.getAllUser();
-//        //TODO：权限管理
-//        if (list != null) {
+//    /**
+//     * 用来获取所有存在于数据库的用户的接口
+//     * @return
+//     */
+//    @GetMapping("/api/getAllUser")
+//    @ResponseBody
+//    public Result<User> getAllUser() {
+//        Result result = new Result();
+//        Message_oa mo = new Message_oa();
+//        mo.setLogin(true);
+//        List<User> list = userService.getAllUser();
+//        mo.setText("获取失败！");
+//        result.setMsg(mo);
+//
+//        return result;
+//    }
+
+//    /**
+//     * 用stuid来获取用户的详细信息以及一些定义好的字段
+//     * @param stuid
+//     * @return
+//     */
+//    @GetMapping("/api/getUserInfoByStuid")
+//    @ResponseBody
+//    public Result getUserInfoByStuid(String stuid) {
+//        Result result = new Result();
+//        List list = new ArrayList();
+//        Message_oa mo = new Message_oa();
+//        mo.setLogin(true);
+//        //判断所传stuid是否为空
+//        if (stuid==null||stuid.equals(""))
+//        {
+//            return result;
+//        }
+//
+//        User user = userService.getUserByStuid(stuid);
+//        Map<String, List<Dict>> dict = dictService.getAllDict();
+//
+//        Subject subject = SecurityUtils.getSubject();
+//        if (subject.getPrincipal() != null) {
+//            mo.setLogin(true);
+//        } else {
+//            mo.setLogin(false);
+//        }
+//        if (user != null) {
+//
+//            list.add(user);
+//            list.add(dict);
 //            result.setData(list);
 //            mo.setText("获取成功！");
 //
@@ -201,68 +231,12 @@ public class UserController {
 //            result.setSuccess(true);
 //            return result;
 //        }
-        mo.setText("获取失败！");
-        result.setMsg(mo);
-
-        return result;
-    }
-
-    /**
-     * 用stuid来获取用户的详细信息以及一些定义好的字段
-     * @param stuid
-     * @return
-     */
-    @GetMapping("/api/getUserInfoByStuid")
-    @ResponseBody
-    public Result getUserInfoByStuid(String stuid) {
-        Result result = new Result();
-        List list = new ArrayList();
-        Message_oa mo = new Message_oa();
-        mo.setLogin(true);
-//        /**
-//         * 判断用户是否注销
-//         */
-//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-//        if (sysuser == null) {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        } else {
-//            mo.setLogin(true);
-//        }
-        //判断所传stuid是否为空
-        if (stuid==null||stuid.equals(""))
-        {
-            return result;
-        }
-
-        User user = userService.getUserByStuid(stuid);
-        Map<String, List<Dict>> dict = dictService.getAllDict();
-
-        Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal() != null) {
-            mo.setLogin(true);
-        } else {
-            mo.setLogin(false);
-        }
-        if (user != null) {
-
-            list.add(user);
-            list.add(dict);
-            result.setData(list);
-            mo.setText("获取成功！");
-
-            result.setMsg(mo);
-            result.setSuccess(true);
-            return result;
-        }
-        mo.setText("获取失败！");
-        result.setMsg(mo);
-        result.setSuccess(false);
-
-        return result;
-    }
+//        mo.setText("获取失败！");
+//        result.setMsg(mo);
+//        result.setSuccess(false);
+//
+//        return result;
+//    }
 
     /**
      *根据登录的个人信息返回返回个人的详细信息以及相关设定好的字段
@@ -318,6 +292,7 @@ public class UserController {
      */
     @GetMapping("/api/member")
     @ResponseBody
+    @RequiresPermissions("user:member:list")
     public JResult getUserByContent(String content, String period, String depart, String campus) {
         List<User> list = new ArrayList<User>();
 
@@ -372,6 +347,8 @@ public class UserController {
             } else if (role == 2 || role == 3) {
                 //行政与主管可以根据条件获取
                 list = userService.getUserByContent(content, depart, period, campus);
+            }else if(role == 11){
+                list = userService.getUserByContentAdmin(content, depart, period, campus);
             }
         }catch (Exception e){
             jData.setConditions(jCondition);
@@ -407,6 +384,7 @@ public class UserController {
      */
     @PostMapping("/api/member/{key}")
     @ResponseBody
+    @RequiresPermissions("user:member:update")
     public Result updateMember(JUser jUser, @PathVariable("key") String key) {
         Result result = new Result();
         List list = new ArrayList();
@@ -458,6 +436,7 @@ public class UserController {
      */
     @GetMapping("/api/member/excel")
     @ResponseBody
+    @RequiresPermissions("user:member:list")
     public void gerExcel(HttpServletResponse response, String depart,String  campus, String content,String period) throws IOException {
         List<User> list = new ArrayList<User>();
         Message_oa mo = new Message_oa();
@@ -595,6 +574,7 @@ public class UserController {
      */
     @PostMapping("/api/me/pwd")
     @ResponseBody
+    @RequiresPermissions("")
     public Result updateMember(String uid, String oldPwd,String newPwd)
     {
         Result result = new Result();
@@ -603,16 +583,6 @@ public class UserController {
         int uid1;
 
         mo.setLogin(true);
-//        if (sysuser == null)
-//        {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        }else {
-//            mo.setLogin(true);
-//        }
-
         if (uid == null || uid.equals("")) {
             uid1 = sysuser.getId();
         } else {
@@ -645,13 +615,6 @@ public class UserController {
 
     /**
      * 用户通过个人设置修改个人信息
-     * @param key
-     * @param stuid
-     * @param qq
-     * @param email
-     * @param phone
-     * @param debitcard
-     * @return
      */
     @PostMapping("/api/me/{key}")
     @ResponseBody
@@ -660,15 +623,6 @@ public class UserController {
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-//        if (sysuser == null)
-//        {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        }else {
-//            mo.setLogin(true);
-//        }
         mo.setLogin(true);
 
         boolean success = false;

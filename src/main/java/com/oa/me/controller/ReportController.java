@@ -11,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/history")
+    @RequiresPermissions("report:history")
     public Result history(String uid1) {
         Result result = new Result();
         JCondition jCondition = new JCondition();
@@ -130,6 +132,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/status")
+    @RequiresPermissions("report:status")
     public RResult getStatus(String uid) {
         RResult rResult = new RResult();
         Message_oa mo = new Message_oa();
@@ -175,6 +178,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("")
+    @RequiresPermissions("report:list")
     public Result getReportsbByContact(String campus, String contact, String depart,String work_start_date) {
 
         Result result = new Result();
@@ -255,6 +259,7 @@ public class ReportController {
      * @return
      */
     @PostMapping("/status")
+    @RequiresPermissions("report:status:update")
     public RResult setStatus(RDate rDate) {
         RResult rResult = new RResult();
         Message_oa mo = new Message_oa();
@@ -306,6 +311,7 @@ public class ReportController {
      * @return
      */
     @PostMapping("")
+    @RequiresPermissions("report:save")
     public RResult getReportsbByContact(String content, String suggestion)
     {
         RResult rResult = new RResult();
@@ -364,6 +370,7 @@ public class ReportController {
      * @return
      */
     @PostMapping("/review")
+    @RequiresPermissions("report:review")
     public Result review(int id,String comment,String rate,String salary_sug,String salary){
         Result result = new Result();
         Message_oa mo = new Message_oa();
@@ -416,6 +423,7 @@ public class ReportController {
      */
     @GetMapping("/excel")
     @ResponseBody
+    @RequiresPermissions("report:list")
     public void test6(HttpServletResponse response, String end_date,String start_date) throws IOException {
         List<RReport> list = new ArrayList<RReport>();
 

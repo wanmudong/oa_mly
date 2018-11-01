@@ -12,6 +12,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class RecruitController {
      * @return
      */
     @GetMapping("/api/recruit")
+    @RequiresPermissions("user:recruit:list")
     @ResponseBody
     public JResult getRecruit(String content,String depart,String campus){
         Result result = new Result();
@@ -135,6 +137,7 @@ public class RecruitController {
      * @return
      */
     @PostMapping ("api/recruit/{id}")
+    @RequiresPermissions("user:recruit:update")
     public RResult update(@PathVariable("id") int id, int status, String desc, String depart){
     //    RRecruit rRecruit = new RRecruit();
         RResult rResult = new RResult();
@@ -217,6 +220,7 @@ public class RecruitController {
      * @return
      */
     @GetMapping ("api/recruit/{id}")
+    @RequiresPermissions("user:recruit:info")
     public RResult getRecruitById(@PathVariable("id") int id)
     {
 
@@ -269,6 +273,7 @@ public class RecruitController {
      */
     @GetMapping("/api/recruit/excel")
     @ResponseBody
+    @RequiresPermissions("user:recruit:list")
     public void gerExcel(HttpServletResponse response, String depart, String  campus, String content, String period) throws IOException {
         List<Recruit> list = new ArrayList<Recruit>();
         List<RRecruit> list1 = new ArrayList<RRecruit>();

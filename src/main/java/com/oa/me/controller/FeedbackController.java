@@ -7,6 +7,7 @@ import com.oa.me.Service.FeedbackService;
 import com.oa.me.domain.User;
 import com.oa.me.utils.mapperUser;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class FeedbackController {
      * @return
      */
     @GetMapping("")
+    @RequiresPermissions("feedback:list")
     public Result getAllFeedback(){
 
         Result result = new Result();
@@ -76,27 +78,16 @@ public class FeedbackController {
      * @return
      */
     @PostMapping("")
+    @RequiresPermissions("feedback:add")
     public Result setFeedback(int value, String content,HttpServletRequest request){
         Result result = new Result();
         List list = new ArrayList();
         Message_oa mo = new Message_oa();
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
         mo.setLogin(true);
-//        if (sysuser == null)
-//        {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        }else {
-//            mo.setLogin(true);
-//        }
-
-            int uid = sysuser.getId();
-            int type = value;
-            boolean success = feedbackService.setFeedback(type, content, uid, request);
-
-
+        int uid = sysuser.getId();
+        int type = value;
+        boolean success = feedbackService.setFeedback(type, content, uid, request);
         if (success) {
 
             mo.setText("反馈成功");

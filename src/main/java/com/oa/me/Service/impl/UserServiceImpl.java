@@ -8,6 +8,9 @@ import com.oa.me.domain.*;
 import com.oa.me.utils.oa_md5;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import static com.oa.me.utils.oa_md5.md5_salt;
  * Created by chenjiehao on 2018/9/17
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.REPEATABLE_READ)
 public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
@@ -133,6 +137,31 @@ public class UserServiceImpl implements UserService {
         for (User user : list) {
             if (!dep.equals("1")){
                 user.setDebitcard("");
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<User> getUserByContentAdmin(String content, String depart, String circle, String campus) {
+        List<User> list = new ArrayList<User>();
+        //TODO:动态sql语句（利用mybatis的xml方式）
+        if (campus == null || campus.equals("")) {
+            if (depart == null || depart.equals("")) {
+                list = userDao.getUserByContentAdmin(content);
+            } else {
+                list = userDao.getUserByContentByDepartAdmin(content, Integer.parseInt(depart));
+            }
+        } else {
+            if (depart == null || depart.equals("")) {
+
+                list = userDao.getUserByContentByCampusAdmin(content, campus);
+
+            } else {
+
+                list = userDao.getUserByContentAllAdmin(content, Integer.valueOf(depart), Integer.valueOf(campus));
+
             }
         }
 

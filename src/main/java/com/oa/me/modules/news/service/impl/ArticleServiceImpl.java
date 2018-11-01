@@ -115,7 +115,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String url6 = "http://www.chenliangliang.xin/mly/open/api/news";
 
         List<Article> list = baseMapper.queryArticleUpload();
-        if (list==null){ return "success"; }
+        if (list==null){ return "无文章需要更新"; }
         List<String> list_json =new ArrayList<>();
 
         for (Article article:list) {

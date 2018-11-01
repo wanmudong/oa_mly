@@ -1,7 +1,6 @@
 package com.oa.me.modules.news.controller;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.oa.me.modules.common.annotation.SysLog;
 import com.oa.me.modules.common.utils.MyPageInfo;
 import com.oa.me.modules.common.utils.Result;
@@ -11,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -37,10 +39,10 @@ public class ArticleController {
     /**
      * 列表
      */
-  //  @RequiresPermissions("news:article:list")
+   @RequiresPermissions("news:article:list")
     @GetMapping("/list")
-    public Result list(String tags) {
-
+    public Result list(String tags,@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10")int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
         MyPageInfo page = articleService.queryPage(tags);
 
         return Result.OK().put("data",page);
@@ -49,49 +51,30 @@ public class ArticleController {
 
 
     @GetMapping("/info/{id}")
-  //  @RequiresPermissions("news:article:info")
+    @RequiresPermissions("news:article:info")
     public Result detail(@PathVariable("id") Long id){
         Article article=articleService.getDetail(id);
         return Result.OK().put("data",article);
     }
 
 
-//    /**
-//     * 审核文章
-//     */
-//  //  @SysLog("审核文章")
-//    @GetMapping("/audit/{id}")
-////    @RequiresPermissions("news:article:audit")
-//    public Result audit(@PathVariable("id") Long id,String comment){
-//
-//
-//        return Result.error("您无审核权限");
-//    }
 
-//
-//    /**
-//     * 信息
-//     */
-////    @GetMapping("/info/{id}")
-////    @RequiresPermissions("news:article:info")
-////    public Result info(@PathVariable("id") Long id) {
-////            Article article = articleService.selectById(id);
-////
-////        return Result.OK().put("article", article);
-////    }
-//
 
     /**
      * 更新管理后台文章
      */
+
+   @RequiresPermissions("news:article:upload")
     @GetMapping("/upload")
-//    @RequiresPermissions("news:article:upload")
+    @Scheduled(cron = "0 0 21 ? * SUN")
     public Result upload(){
 
         String msg = articleService.uploadArticle();
         if ("success".equals(msg)){
+            log.info(msg);
             return Result.OK();
         }
+        log.info(msg);
         return Result.error(msg);
     }
 
@@ -99,7 +82,7 @@ public class ArticleController {
      * 审核文章
      */
     @PostMapping("/audit/{id}")
-    //@RequiresPermissions("news:article:audit")
+    @RequiresPermissions("news:article:audit")
     public Result audit(@PathVariable("id") Long id,  String comment,  Long pass) {
         Integer num;
         try {
@@ -118,7 +101,7 @@ public class ArticleController {
      * 保存（json格式）
      */
     @PostMapping("/save")
-//  @RequiresPermissions("news:article:save")
+     @RequiresPermissions("news:article:save")
     public Result save( @RequestBody String json) {
         log.info("收到了({})",json);
         try {
@@ -135,7 +118,7 @@ public class ArticleController {
      */
     @SysLog("修改文章")
     @PostMapping("/update")
-  //  @RequiresPermissions("news:article:update")
+    @RequiresPermissions("news:article:update")
     public Result update(@RequestBody Article article) {
             articleService.updateById(article);
         return Result.OK();
@@ -147,24 +130,23 @@ public class ArticleController {
      */
     @SysLog("历史文章")
     @GetMapping("/history")
-   // @RequiresPermissions("news:article:history")
+   @RequiresPermissions("news:article:history")
     public Result history( String username,@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
         MyPageInfo myPageInfo = articleService.getHistory(username);
         return Result.OK().put("data",myPageInfo);
     }
 
-//
-//    /**
-//     * 删除
-//     */
-//    @SysLog("删除文章")
-//    @PostMapping("/delete")
-//    @RequiresPermissions("news:article:delete")
-//    public Result delete(@RequestBody Long[]ids) {
-//            articleService.deleteBatchIds(Arrays.asList(ids));
-//
-//        return Result.OK();
-//    }
+
+    /**
+     * 删除
+     */
+    @SysLog("删除文章")
+    @GetMapping("/delete/{id}")
+    @RequiresPermissions("news:article:delete")
+    public Result delete(@PathVariable("id")Long  id) {
+            articleService.deleteById(id);
+        return Result.OK();
+    }
 
 }

@@ -21,7 +21,14 @@ public interface ReportDao {
      * @param uid
      * @return
      */
-    @Select("select * from oa_report where uid=#{uid}")
+    @Select("select oa_report.* from oa_report,oa_member where oa_report.uid=oa_member.id and oa_member.stuid=#{uid}")
+    @Results({
+            @Result(property = "start_date",  column = "start_date"),
+            @Result(property = "end_date",  column = "end_date"),
+            @Result(property = "salary_sug",  column = "salary_sug"),
+            @Result(property = "time_report",  column = "time_report"),
+            @Result(property = "id", column = "id")
+    })
     List<Report> getHistory(@Param("uid") int uid);
 
 

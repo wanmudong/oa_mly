@@ -250,7 +250,6 @@ public class UserController {
         Message_oa mo = new Message_oa();
         mo.setLogin(true);
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-
         User user=new User();
         Map<String, List<Dict>> dict = new HashMap<>();
         try {

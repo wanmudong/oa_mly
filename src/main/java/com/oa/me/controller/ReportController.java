@@ -7,6 +7,7 @@ import com.oa.me.domain.*;
 import com.oa.me.utils.Format;
 import com.oa.me.utils.mapperUser;
 import com.oa.me.utils.timeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.xssf.usermodel.*;
@@ -26,6 +27,7 @@ import java.util.Map;
 /**
  * Created by chenjiehao on 2018/9/27
  */
+@Slf4j
 @RequestMapping("/api/report")
 @RestController
 @EnableAutoConfiguration
@@ -43,7 +45,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/history")
-    @RequiresPermissions("report:history")
+    //@RequiresPermissions("report:history")
     public Result history(String uid1) {
         Result result = new Result();
         JCondition jCondition = new JCondition();
@@ -51,8 +53,10 @@ public class ReportController {
         Message_oa mo = new Message_oa();
         int uid = 0;
         SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+        log.info("-----------------");
+        log.info("",sysuser.getUsername());
         if (uid1 == null || uid1.equals("")) {
-            uid = sysuser.getId();
+            uid = Integer.parseInt(sysuser.getUsername());
         } else {
             uid = Integer.parseInt(uid1);
         }
@@ -60,26 +64,19 @@ public class ReportController {
         jCondition.setUid(uid);
 
         mo.setLogin(true);
-//        if (sysuser == null) {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        }
+
         try {
+            log.info("uid",uid);
             list = reportService.getHistory(uid);
         }catch (Exception e)
         {
+            log.info("",e);
             mo.setText("获取失败！");
             mo.setLogin(true);
             result.setMsg(mo);
             result.setSuccess(false);
             return result;
         }
-      //  if (list != null) {
-
-//            RRecruit rRecruit= mapperUser.mapperRRecruit(recruit,dictDao);
-//            result.setData(list);
             result.setConditions(jCondition);
             mo.setText("获取成功！");
             mo.setLogin(true);
@@ -87,9 +84,6 @@ public class ReportController {
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-      //  }
-
-
 
     }
 
@@ -144,12 +138,6 @@ public class ReportController {
             uid1 = Integer.parseInt(uid);
         }
         mo.setLogin(true);
-//        if (sysuser == null) {
-//            //用户已注销
-//            rResult.setMsg(mo);
-//            rResult.getMsg().setText("用户已注销");
-//            return rResult;
-//        }
         RDate rDate = reportService.getStatus(uid1);
 
         if (rDate != null) {

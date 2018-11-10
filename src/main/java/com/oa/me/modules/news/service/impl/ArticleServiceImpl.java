@@ -48,7 +48,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public Article getDetail(Long id) {
-        return baseMapper.queryDetail(id);
+       Article article =  baseMapper.queryDetail(id);
+
+        List<Integer> list_tag = articleTagMapper.queryArticleTags(Math.toIntExact(id));
+        article.setTagIdList(list_tag.toArray(new Integer[list_tag.size()]));
+        return article;
     }
 
 
@@ -115,11 +119,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String url6 = "http://www.chenliangliang.xin/mly/open/api/news";
 
         List<Article> list = baseMapper.queryArticleUpload();
-        if (list==null){ return "无文章需要更新"; }
+        if (list==null || list.isEmpty()){ return "无文章需要更新"; }
         List<String> list_json =new ArrayList<>();
 
         for (Article article:list) {
-            List<Integer> list_tag = articleTagMapper.queryArticleTags(article.getId());
+            List<Integer> list_tag = articleTagMapper.queryArticleTags(Math.toIntExact(article.getId()));
             article.setTagIdList(list_tag.toArray(new Integer[list_tag.size()]));
 
             Long id = article.getId();

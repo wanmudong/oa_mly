@@ -17,5 +17,5 @@ public interface ArticleTagMapper extends BaseMapper<ArticleTag>{
 
         Integer insertArticleTag(ArticleTag articleTag);
 
-        List<Integer> queryArticleTags(@Param("id") Long id);
+        List<Integer> queryArticleTags(@Param("article_id") Integer article_id);
 }

@@ -141,6 +141,7 @@
 
     <select id="queryDetail" resultType="com.oa.me.modules.news.entity.Article">
         SELECT
+            id,
             title,
             summary,
             content,

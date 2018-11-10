@@ -109,7 +109,7 @@ public interface RecruitDao {
 //            "college  like '%${anything}%' or " +
 //            "campus  like '%${anything}%' or " +
 //            "major  like '%${anything}%'
-            "phone  like '%${content}%') and (depart=#{depart} and campus=#{campus} and status=1) "
+            "phone  like '%${content}%') and (depart=#{depart} and campus=#{campus} and status=1) order by id desc "
     )
     List<Recruit> getRecruitByContentAll(@Param("content") String content,@Param("depart") int depart,@Param("campus") int campus);
 
@@ -130,7 +130,7 @@ public interface RecruitDao {
 //            "college  like '%${anything}%' or " +
 //            "campus  like '%${anything}%' or " +
 //            "major  like '%${anything}%'
-            "phone  like '%${content}% ') and status=1 "
+            "phone  like '%${content}% ') and status=1 order by id desc"
     )
     List<Recruit> getRecruitByContent(@Param("content") String content);
 //    List<Recruit> getUserByContent(String content);
@@ -153,7 +153,7 @@ public interface RecruitDao {
 //            "college  like '%${anything}%' or " +
 //            "campus  like '%${anything}%' or " +
 //            "major  like '%${anything}%'
-                   "phone  like '%${content}%') and (depart=#{depart} and status=1)  "
+                   "phone  like '%${content}%') and (depart=#{depart} and status=1)  order by id desc "
     )
     List<Recruit> getRecruitByContentByDepart(@Param("content") String content,@Param("depart") int depart);
 //    List<Recruit> getUserByContentByDepart(String content, String department);
@@ -176,7 +176,7 @@ public interface RecruitDao {
 //            "college  like '%${anything}%' or " +
 //            "campus  like '%${anything}%' or " +
 //            "major  like '%${anything}%'
-            "phone  like '%${content}%') and ( campus=#{campus} and status=1 )"
+            "phone  like '%${content}%') and ( campus=#{campus} and status=1 ) order by id desc"
     )
     List<Recruit> getRecruitByContentByCampus(@Param("content") String content,@Param("campus") int campus);
 

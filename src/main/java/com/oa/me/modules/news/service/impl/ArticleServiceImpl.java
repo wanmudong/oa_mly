@@ -171,7 +171,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //        System.out.println(userList);
 //        page.setRecords(userList);
 
-        PageInfo<Article> pageInfo = new PageInfo<>(baseMapper.queryArticleByUsername());
+        PageInfo<Article> pageInfo = new PageInfo<>(baseMapper.queryArticleByUsername(username));
         return new MyPageInfo<>(pageInfo);
 
     }

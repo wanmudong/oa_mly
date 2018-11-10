@@ -13,9 +13,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Map;
-
 
 /**
  * 文章管理
@@ -86,22 +83,18 @@ public class ArticleController {
     public Result audit(@PathVariable("id") Long id,  String comment,  Long pass) {
         Integer num;
         try {
-          num = articleService.updateAudit(id,pass,comment);
-        }catch (Exception e)
-        {
-            log.info("审核({})失败",id);
-            log.info("错误如下",e);
-            return Result.error("审核失败");
+            num = articleService.updateAudit(id, pass, comment);
+        } catch (Exception e) {
+            log.info("审核失误");
+            return Result.error("审核失误");
         }
-        return num==1?Result.OK():Result.error("审核信息有误");
+        return Result.OK();
     }
-
-
     /**
      * 保存（json格式）
      */
     @PostMapping("/save")
-     @RequiresPermissions("news:article:save")
+    @RequiresPermissions("news:article:save")
     public Result save( @RequestBody String json) {
         log.info("收到了({})",json);
         try {
@@ -132,7 +125,7 @@ public class ArticleController {
     @GetMapping("/history")
    @RequiresPermissions("news:article:history")
     public Result history( String username,@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
-        PageHelper.startPage(pageNo,pageSize);
+
         MyPageInfo myPageInfo = articleService.getHistory(username);
         return Result.OK().put("data",myPageInfo);
     }

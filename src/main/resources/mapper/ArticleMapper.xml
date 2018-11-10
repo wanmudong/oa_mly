@@ -86,6 +86,7 @@
             id,
             title,
             state,
+            comment,
             weight,
             `read`,
             username,
@@ -114,6 +115,7 @@
             title,
             state,
             weight,
+            comment,
             `read`,
             username,
             create_time AS createTime
@@ -128,10 +130,12 @@
             title,
             state,
             weight,
+            comment,
             `read`,
             username,
             create_time AS createTime
         FROM article
+        where  username=#{username}
         ORDER BY create_time DESC
     </select>
 

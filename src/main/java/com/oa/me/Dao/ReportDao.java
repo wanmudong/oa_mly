@@ -21,7 +21,7 @@ public interface ReportDao {
      * @param uid
      * @return
      */
-    @Select("select oa_report.* from oa_report,oa_member where oa_report.uid=oa_member.id and oa_member.stuid=#{uid}")
+    @Select("select oa_report.* from oa_report,oa_member where oa_report.uid=oa_member.id and oa_member.stuid=#{uid} order by id desc")
     @Results({
             @Result(property = "start_date",  column = "start_date"),
             @Result(property = "end_date",  column = "end_date"),

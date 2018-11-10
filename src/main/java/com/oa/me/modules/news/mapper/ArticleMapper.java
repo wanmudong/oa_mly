@@ -45,7 +45,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     Integer updateUpload(@Param("id") Long id);
 
-    Page<Article> queryArticleByUsername();
+    Page<Article> queryArticleByUsername(@Param("username") String username);
 
 
 

@@ -58,12 +58,6 @@ public class ReportController {
         jCondition.setUid(uid);
 
         mo.setLogin(true);
-//        if (sysuser == null) {
-//            //用户已注销
-//            result.setMsg(mo);
-//            result.getMsg().setText("用户已注销");
-//            return result;
-//        }
         try {
             list = reportService.getHistory(uid);
         }catch (Exception e)
@@ -485,6 +479,19 @@ public class ReportController {
             workbook.write(response.getOutputStream());
             workbook.close();
         }
+    }
+
+    /**
+     * 获取当前汇报状态
+
+     */
+    @GetMapping("/reportTimes")
+    public Result reportTimes(){
+        List list = reportService.getReportTimes();
+        Result result = new Result();
+        result.setData(list);
+        result.setSuccess(true);
+        return result;
     }
 
 }

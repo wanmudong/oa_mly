@@ -11,11 +11,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class MeApplicationTests {
 
     @Test
-    public void contextLoads() {
-
+    public void ins() {
+        int n=10;
+        int result = in(n);
+        System.out.println(result);
     }
 
-    @Test
+    public int in(int n ){
+
+        if (n==1){
+            return 1;
+        }else {
+           return n*in(n-1);
+        }
+    }
+
+
     public  void radomString(){
 //        String result="";
 //        for(int i=0;i<6;i++){

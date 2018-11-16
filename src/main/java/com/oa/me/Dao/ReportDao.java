@@ -22,6 +22,13 @@ public interface ReportDao {
      * @return
      */
     @Select("select * from oa_report where uid=#{uid}")
+    @Results({
+            @Result(property = "start_date",  column = "start_date"),
+            @Result(property = "end_date",  column = "end_date"),
+            @Result(property = "salary_sug",  column = "salary_sug"),
+            @Result(property = "time_report",  column = "time_report"),
+            @Result(property = "id", column = "id")
+    })
     List<Report> getHistory(@Param("uid") int uid);
 
 
@@ -333,4 +340,8 @@ public interface ReportDao {
             @Result(property = "id", column = "id")
     })
     List<RReport> getAllReport(@Param("start_date_long")long start_date_long);
+
+
+    @Select("select distinct start_date from oa_report order by start_date desc")
+    List<Long> getReportTimes();
 }

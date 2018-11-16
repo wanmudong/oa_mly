@@ -94,4 +94,11 @@ public interface ReportService {
      * @return
      */
     List<RReport> getReportAllExcel(String start_date, String end_date);
+
+
+    /**
+     * 获取以前的汇报时间
+     * @return
+     */
+    List getReportTimes();
 }

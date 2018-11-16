@@ -25,8 +25,6 @@ public class AnnounceController {
     @Resource
     private AnnounceService announceService;
 
-
-
     /**
      * 用于主页面通知的显示
      *

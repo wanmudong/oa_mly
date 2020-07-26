@@ -30,9 +30,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         UserOa userOa = new UserOa();
 
-//        user.setSalt(userDao.getUserSalt(userModel));
-
-        user.setPwd(md5_salt(userModel.getPassword(),userDao.getUserSalt(userModel)));
+        user.setPwd(md5_salt(userModel.getPassword(), userDao.getUserSalt(userModel)));
         user.setStuid(Integer.valueOf(userModel.getUsername()));
         userOa = userDao.getUserLogin(user);
 
@@ -49,51 +47,50 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByStuid(String stuid) {
         User user = userDao.getUserByStuid(stuid);
-        if (user==null){
+
+        if (user == null) {
             return null;
         }
+
         user.setPwd("");
         user.setSalt("");
         return user;
     }
 
     @Override
-    public List<User> getUserByContent(String content, String depart,String campus) {
+    public List<User> getUserByContent(String content, String depart, String campus) {
         /**
          * 部长权限
          */
-        List<User> userList = new  ArrayList<User>();
-
-
-        userList  = userDao.getUserByContentAll(content,Integer.valueOf(depart),Integer.valueOf(campus));
-        for (User user:userList){
-           user.setPwd("");
-           user.setSalt("");
-//           JUser jUser =  mapperUser.mapperJUser(user,dictDao);
-//           jUserList.add(jUser);
+        List<User> userList = new ArrayList<User>();
+        userList = userDao.getUserByContentAll(content, Integer.valueOf(depart), Integer.valueOf(campus));
+        for (User user : userList) {
+            user.setPwd("");
+            user.setSalt("");
         }
         return userList;
     }
 
     @Override
     public boolean updateMember(User user) {
-        SysUser sysUser =  userDao.findSysUserByUsername(String.valueOf(user.getStuid()));
+        //利用user来获取sysUser对象
+        SysUser sysUser = userDao.findSysUserByUsername(String.valueOf(user.getStuid()));
         String password = sysUser.getPassword();
         String salt = sysUser.getSalt();
-
-        if (user.getPwd()==null||user.getPwd().equals("")){
-
-           user.setPwd(password);
-        }else {
-             password = user.getPwd();
-//            String salt = user.getSalt();
-            password = oa_md5.md5_salt(password,salt);
+        //判断密码这一项是否需要更新
+        if (user.getPwd() == null || user.getPwd().equals("")) {
+            //如果不需要更新那么直接将sysUser的密码存入user即可
+            user.setPwd(password);
+        } else {
+            //如果需要修改密码，那么我们需要获取到前台传给user的密码然后对其进行加盐加密存入数据库
+            password = user.getPwd();
+            password = oa_md5.md5_salt(password, salt);
             user.setPwd(password);
         }
 
         long success = userDao.updateMember(user);
 
-        return success==1?true:false;
+        return success == 1 ? true : false;
     }
 
 
@@ -105,55 +102,52 @@ public class UserServiceImpl implements UserService {
          *
          */
         List<User> list = new ArrayList<User>();
-        if (campus==null|| campus.equals("")){
+        //TODO:动态sql语句（利用mybatis的xml方式）
+        if (campus == null || campus.equals("")) {
+            if (depart == null || depart.equals("")) {
 
-            if (depart==null|| depart.equals("")){
-                list  = userDao.getUserByContent(content);
-            }else {
-                list  = userDao.getUserByContentByDepart(content, Integer.parseInt(depart));
+                list = userDao.getUserByContent(content);
+
+            } else {
+
+                list = userDao.getUserByContentByDepart(content, Integer.parseInt(depart));
+
             }
-        }else {
-            if (depart==null|| depart.equals("")){
-                list  = userDao.getUserByContentByCampus(content,campus);
-            }else {
+        } else {
+            if (depart == null || depart.equals("")) {
 
-            list  = userDao.getUserByContentAll(content,Integer.valueOf(depart),Integer.valueOf(campus));
+                list = userDao.getUserByContentByCampus(content, campus);
+
+            } else {
+
+                list = userDao.getUserByContentAll(content, Integer.valueOf(depart), Integer.valueOf(campus));
+
             }
         }
-//        for (User user:list){
-//            user.setPwd("");
-//            user.setSalt("");
-//        }
         return list;
     }
 
     @Override
     public boolean updateMemberByMe(String key, String stuid, String qq, String email, String phone, String debitcard) {
-        long success=1;
-        long success1=1;
-        long success2=1;
-        long success3=1;
-        if (qq!=null)
-        {
-            success = userDao.setQqByStuid(stuid,qq);
+        long success = 1;
+        long success1 = 1;
+        long success2 = 1;
+        long success3 = 1;
+        if (qq != null) {
+            success = userDao.setQqByStuid(stuid, qq);
         }
-        if (email!=null)
-        {
-            success1 = userDao.setEmailByStuid(stuid,email);
+        if (email != null) {
+            success1 = userDao.setEmailByStuid(stuid, email);
         }
-        if (phone!=null)
-        {
-            success2 = userDao.setPhoneByStuid(stuid,phone);
+        if (phone != null) {
+            success2 = userDao.setPhoneByStuid(stuid, phone);
         }
-        if (debitcard!=null)
-        {
-            success3 = userDao.setDebitcardByStuid(stuid,debitcard);
+        if (debitcard != null) {
+            success3 = userDao.setDebitcardByStuid(stuid, debitcard);
         }
-        if (success>0&&success1>0&&success2>0&&success3>0)
-        {
+        if (success > 0 && success1 > 0 && success2 > 0 && success3 > 0) {
             return true;
         }
-
 
 
         return false;

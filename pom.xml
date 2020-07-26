@@ -184,6 +184,7 @@
     </dependencies>
 
     <build>
+        <finalName>oa_mly_online_1.0.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -192,5 +193,32 @@
         </plugins>
     </build>
 
+<profiles>
+    <!--开发环境 -->
+    <profile>
+        <id>dev</id>
+        <properties>
+            <spring.profiles.active>dev</spring.profiles.active>
+        </properties>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+    </profile>
+    <!--测试环境 -->
+    <profile>
+        <id>test</id>
+        <properties>
+            <spring.profiles.active>test</spring.profiles.active>
+        </properties>
+    </profile>
+    <!--生产环境 -->
+    <profile>
+        <id>prod</id>
+        <properties>
+            <spring.profiles.active>prod</spring.profiles.active>
+        </properties>
+    </profile>
+</profiles>
 
 </project>
+

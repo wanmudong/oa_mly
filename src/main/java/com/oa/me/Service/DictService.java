@@ -10,5 +10,9 @@ import java.util.Map;
  */
 public interface DictService {
 
+    /**
+     * 用来获取一些在数据库中定义好的字段，诸如部门，校区，工作状态等
+     * @return
+     */
     Map<String, List<Dict>> getAllDict();
 }

@@ -40,6 +40,11 @@ public interface  DictDao {
     @Select("select dict_memo from oa_dict where dict_table_name=#{dict_table_name}")
     String getDictMemo(String dict_table_name);
 
+    /**
+     * 以个人id获取到招新的审核信息
+     * @param id
+     * @return
+     */
     @Select("select rid,step_0,step_1,step_2,step_3,step_4 from oa_recruit_log where rid=#{id}")
     @Results({
             @Result(property = "id",  column = "rid"),
@@ -52,7 +57,7 @@ public interface  DictDao {
     Steps getSteps(@Param("id") int id);
 
     /**
-     *
+     * 通过校区的名字获取校区的代号
      * @return
      */
     @Select("select dict_id from oa_dict_campus where dict_item_name=#{campus}")
@@ -126,7 +131,11 @@ public interface  DictDao {
     @Select("select dict_id from oa_dict_campus where dict_item_name=#{campus}")
     String getCampusIdByName(@Param("campus") String campus);
 
-
+    /**
+     * 通过反馈的类型获取该反馈类型的代号
+     * @param type
+     * @return
+     */
     @Select("select dict_item_name from oa_dict_feedback where dict_id=#{type}")
     String getFeedbackTypeNameById(String type);
 }

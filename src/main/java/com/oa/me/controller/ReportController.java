@@ -36,6 +36,11 @@ public class ReportController {
     @Resource
     private DictDao dictDao;
 
+    /**
+     * 获取个人汇报历史
+     * @param uid1
+     * @return
+     */
     @GetMapping("/history")
     public Result history(String uid1) {
         Result result = new Result();
@@ -51,16 +56,19 @@ public class ReportController {
         }
 
         jCondition.setUid(uid);
-        if (sysuser == null) {
-            //用户已注销
+
+        mo.setLogin(true);
+        try {
+            list = reportService.getHistory(uid);
+        }catch (Exception e)
+        {
+            mo.setText("获取失败！");
+            mo.setLogin(true);
             result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
+            result.setSuccess(false);
             return result;
         }
-
-        list = reportService.getHistory(uid);
-
-        if (list != null) {
+      //  if (list != null) {
 
 //            RRecruit rRecruit= mapperUser.mapperRRecruit(recruit,dictDao);
 //            result.setData(list);
@@ -71,13 +79,9 @@ public class ReportController {
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-        }
+      //  }
 
-        mo.setText("获取失败！");
-        mo.setLogin(true);
-        result.setMsg(mo);
-        result.setSuccess(false);
-        return result;
+
 
     }
 
@@ -114,6 +118,11 @@ public class ReportController {
 //
 //    }
 
+    /**
+     * 获取当前汇报状态
+     * @param uid
+     * @return
+     */
     @GetMapping("/status")
     public RResult getStatus(String uid) {
         RResult rResult = new RResult();
@@ -125,12 +134,13 @@ public class ReportController {
         } else {
             uid1 = Integer.parseInt(uid);
         }
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
         RDate rDate = reportService.getStatus(uid1);
 
         if (rDate != null) {
@@ -151,8 +161,15 @@ public class ReportController {
 
     }
 
+    /**
+     * 在权限允许的条件下获取成员的汇报信息
+     * @param campus
+     * @param contact
+     * @param depart
+     * @return
+     */
     @GetMapping("")
-    public Result getReportsbByContact(String campus, String contact, String depart) {
+    public Result getReportsbByContact(String campus, String contact, String depart,String work_start_date) {
 
         Result result = new Result();
         Message_oa mo = new Message_oa();
@@ -168,33 +185,44 @@ public class ReportController {
         depart = dictDao.getDepartIdByName(depart);
         campus = dictDao.getCampusIdByName(campus) == "0" ? "" : dictDao.getCampusIdByName(campus);
 
-
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        } else {
-            mo.setLogin(true);
-        }
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        } else {
+//            mo.setLogin(true);
+//        }
 
 
         String depart_0 = sysuser.getDepart();
         Integer role = Integer.valueOf(sysuser.getRole());
         String campus_0 = sysuser.getCampus();
 
-        if (role == 0) {
-            result.setData(list);
-            mo.setText("获取失败,权限不足！");
+        try {
+            if (role == 0) {
+                result.setData(list);
+                mo.setText("获取失败,权限不足！");
+                result.setMsg(mo);
+                result.setSuccess(true);
+                return result;
+            } else if (role == 1) {
+                list = reportService.getReportByContent(contact, depart_0, campus_0,work_start_date);
+            } else if (role == 2 || role == 3) {
+                list = reportService.getReportByContentAndCampus(contact, depart, campus,work_start_date);
+            }
+
+        }catch (Exception e)
+        {
+            mo.setText("获取失败！");
+
             result.setMsg(mo);
             result.setSuccess(false);
+            result.setData(list);
             return result;
-        } else if (role == 1) {
-            list = reportService.getReportByContent(contact, depart_0, campus_0);
-        } else if (role == 2 || role == 3) {
-            list = reportService.getReportByContentAndCampus(contact, depart, campus);
         }
-        if (!list.isEmpty()) {
+        //if (!list.isEmpty()) {
 
 
             result.setData(list);
@@ -203,43 +231,49 @@ public class ReportController {
             result.setMsg(mo);
             result.setSuccess(true);
             return result;
-        }
+   //     }
 
-        result.setData(list);
+
 //        jResult.setData(jData);
 
-        mo.setText("获取失败！");
 
-        result.setMsg(mo);
-        result.setSuccess(false);
-        return result;
 
 
     }
 
 //
 
-
+    /**
+     * 修改汇报状态
+     * @param rDate
+     * @return
+     */
     @PostMapping("/status")
     public RResult setStatus(RDate rDate) {
         RResult rResult = new RResult();
         Message_oa mo = new Message_oa();
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
+        mo.setLogin(true);
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
         //TODO:权限控制
         boolean success=false;
-        if (rDate.getReport_stat().equals("close")) {
 
-             success = reportService.setStatusClose(rDate.getReport_stat());
-        } else {
 
-             success = reportService.setStatus(rDate);
-        }
+            if (rDate.getReport_stat().equals("close")) {
+
+                success = reportService.setStatusClose(rDate.getReport_stat());
+            } else {
+
+                success = reportService.setStatus(rDate);
+            }
+
+
+
 
         if (success) {
 
@@ -250,14 +284,21 @@ public class ReportController {
             rResult.setSuccess(true);
             return rResult;
         }
-
         mo.setText("修改失败！");
         mo.setLogin(true);
         rResult.setMsg(mo);
         rResult.setSuccess(false);
         return rResult;
 
+
     }
+
+    /**
+     * 存储接收到的汇报信息
+     * @param content
+     * @param suggestion
+     * @return
+     */
     @PostMapping("")
     public RResult getReportsbByContact(String content, String suggestion)
     {
@@ -270,15 +311,21 @@ public class ReportController {
 //        } else {
 //            uid1 = Integer.parseInt(uid);
 //        }
-        if (sysuser == null) {
-            //用户已注销
-            rResult.setMsg(mo);
-            rResult.getMsg().setText("用户已注销");
-            return rResult;
-        }
 
-        boolean success = reportService.setReport(uid1,content,suggestion);
+        mo.setLogin(true);
+//        if (sysuser == null) {
+//            //用户已注销
+//            rResult.setMsg(mo);
+//            rResult.getMsg().setText("用户已注销");
+//            return rResult;
+//        }
+        boolean success;
 
+//        try {
+             success = reportService.setReport(uid1, content, suggestion);
+//        }catch (Exception e){
+
+//        }
 
 
         if (success){
@@ -290,37 +337,50 @@ public class ReportController {
             rResult.setMsg(mo);
             rResult.setSuccess(true);
             return rResult;
-        }
-
+       }
         mo.setText("汇报失败！");
         mo.setLogin(true);
         rResult.setMsg(mo);
         rResult.setSuccess(false);
         return rResult;
 
+
+
     }
 
-
+    /**
+     * 对某一汇报进行审核
+     * @param id
+     * @param comment
+     * @param rate
+     * @param salary_sug
+     * @param salary
+     * @return
+     */
     @PostMapping("/review")
     public Result review(int id,String comment,String rate,String salary_sug,String salary){
         Result result = new Result();
         Message_oa mo = new Message_oa();
+        mo.setLogin(true);
         int uid1 = 0;
-        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+//        SysUser sysuser = (SysUser) SecurityUtils.getSubject().getPrincipal();
 //        if (uid == null || uid.equals("")) {
 //        uid1 = sysuser.getId();
 //        } else {
 //            uid1 = Integer.parseInt(uid);
 //        }
-        if (sysuser == null) {
-            //用户已注销
-            result.setMsg(mo);
-            result.getMsg().setText("用户已注销");
-            return result;
-        }
+//        if (sysuser == null) {
+//            //用户已注销
+//            result.setMsg(mo);
+//            result.getMsg().setText("用户已注销");
+//            return result;
+//        }
+        boolean success;
+//        try {
+             success = reportService.setReportByAdmin(id, comment, rate, salary_sug, salary);
+//        }catch (Exception e){
 
-        boolean success = reportService.setReportByAdmin(id,comment,rate,salary_sug,salary);
-
+//        }
 
 
         if (success){
@@ -338,7 +398,16 @@ public class ReportController {
         result.setSuccess(false);
         return result;
 
+
     }
+
+    /**
+     * 在权限允许的条件下获取条件选择后的excel文件
+     * @param response
+     * @param end_date
+     * @param start_date
+     * @throws IOException
+     */
     @GetMapping("/excel")
     @ResponseBody
     public void test6(HttpServletResponse response, String end_date,String start_date) throws IOException {
@@ -355,8 +424,6 @@ public class ReportController {
         } else if (role == 1) {
             //只能获取本部门的
           list =  reportService.getReportExcel(depart1,campus_0,start_date,end_date);
-
-
         } else if (role == 2 || role == 3) {
             list =  reportService.getReportAllExcel(start_date,end_date);
         }
@@ -412,6 +479,19 @@ public class ReportController {
             workbook.write(response.getOutputStream());
             workbook.close();
         }
+    }
+
+    /**
+     * 获取当前汇报状态
+
+     */
+    @GetMapping("/reportTimes")
+    public Result reportTimes(){
+        List list = reportService.getReportTimes();
+        Result result = new Result();
+        result.setData(list);
+        result.setSuccess(true);
+        return result;
     }
 
 }

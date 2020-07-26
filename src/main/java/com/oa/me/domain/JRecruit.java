@@ -1,9 +1,15 @@
 package com.oa.me.domain;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/22
  */
+@Data
 public class JRecruit {
+    /**
+     * 用于存储招新信息的实体
+     */
    private int id;
     private String name;
     private int stuid;

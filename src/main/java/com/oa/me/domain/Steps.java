@@ -4,11 +4,34 @@ package com.oa.me.domain;
  * Created by chenjiehao on 2018/9/22
  */
 public class Steps {
+    /**
+     * 一个应聘者的多轮面试信息
+     */
+
+    /**
+     * id
+     */
     private int id;
+
+    /**
+     * 初试信息
+     */
     private String step0;
+    /**
+     * 一轮面试信息
+     */
     private String step1;
+    /**
+     * 二轮面试信息
+     */
     private String step2;
+    /**
+     * 三轮面试信息
+     */
     private String step3;
+    /**
+     * 四轮面试信息
+     */
     private String step4;
 
     public int getId() {

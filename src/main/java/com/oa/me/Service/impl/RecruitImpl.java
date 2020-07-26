@@ -250,22 +250,13 @@ public class RecruitImpl implements RecruitService {
             if (department==null|| department.equals("")){
                 list  = recruitDao.getRecruitByContent(content);
             }else {
-//                int depart = Integer.valueOf(department);
-//                System.out.println(depart);
-//                if (depart==0)
-//                {
-//                    list  = recruitDao.getRecruitByContentByDepart(content, depart);
-//                }else {
-//                    list  = recruitDao.getRecruitByContentByDepart(content, depart);
 //
-//                }
                 list = recruitDao.getRecruitByContentByDepart(content,Integer.parseInt(department));
             }
         }else {
             if (department==null|| department.equals("")){
                 list  = recruitDao.getRecruitByContentByCampus(content, Integer.parseInt(campus));
             }else {
-
                 list  = recruitDao.getRecruitByContentAll(content,department.equals("0")?0:Integer.parseInt(department),Integer.parseInt(campus));
             }
         }

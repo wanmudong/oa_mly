@@ -39,7 +39,7 @@ public class mapperUser {
         jUser.setEmail(user.getEmail()==null?"":user.getEmail());
         jUser.setQq(user.getQq()==null?"":user.getQq());
         jUser.setCampus(dictDao.getCampusNameById(user.getCampus())==null?"":dictDao.getCampusNameById(user.getCampus()));
-        jUser.setCollege(user.getCollege()==null?"":user.getMajor());
+        jUser.setCollege(user.getCollege()==null?"":user.getCollege());
         jUser.setMajor(user.getMajor()==null?"":user.getMajor());
         return jUser;
     }

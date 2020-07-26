@@ -5,6 +5,9 @@ package com.oa.me.domain;
  */
 public class RRecruit {
     /**
+     * 用于返回给前端的招新信息的实体
+     */
+    /**
      * key , campus,depart,status,status.status
      */
    private int key;

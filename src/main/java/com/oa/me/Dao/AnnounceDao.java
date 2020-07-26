@@ -19,18 +19,18 @@ public interface AnnounceDao {
     List<Announce> getAnnounce();
 
     /**
-     * 添加通知
+     * 添加一条通知
      * @param announce
      * @return
      */
     @Insert("insert into oa_announce(title,content,publish_time,status,uid) values (" +
             "#{announce.title},#{announce.content},#{announce.publish_time},#{announce.status},#{announce.uid})"
     )
-    Integer setAnnounce(@Param("announce") Announce announce);
+    long setAnnounce(@Param("announce") Announce announce);
 
     /**
-     * 删除通知
+     * 删除一条通知
      */
     @Delete("delete from oa_announce where id = #{id}")
-    Integer delAnnounce(int id);
+    long delAnnounce(int id);
 }

@@ -1,9 +1,15 @@
 package com.oa.me.domain;
 
+import lombok.Data;
+
 /**
  * Created by chenjiehao on 2018/9/27
  */
+@Data
 public class RDate {
+    /**
+     * 用于存储完整的汇报状态的信息的实体
+     */
     private String report_end_date;
     private String report_start_date;
     private String report_stat;

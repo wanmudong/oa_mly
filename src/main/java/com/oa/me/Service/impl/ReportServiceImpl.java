@@ -77,15 +77,19 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List getReportByContent(String contact, String depart_0, String campus_0) {
+    public List getReportByContent(String contact, String depart_0, String campus_0, String work_start_date) {
         List<User> list = new  ArrayList<User>();
         list  = userDao.getUserByContentAll(contact,depart_0.equals("0")?0:Integer.parseInt(depart_0),Integer.parseInt(campus_0));
         List<Report> list1 = new  ArrayList<Report>();
         List<RReport> list2 = new  ArrayList<RReport>();
-        String work_start_date = reportDao.getStatusByName("work_start_date");
+        if (work_start_date == null ||  work_start_date.equals("")){
+            work_start_date = reportDao.getStatusByName("work_start_date");
+            System.out.println(work_start_date);
+        }
         String work_end_date = reportDao.getStatusByName("work_end_date");
         work_start_date = timeUtil.dateTime(Long.parseLong(timeUtil.dateTimeStamp(work_start_date,"yyyy-MM-dd")),"yyyy-MM-dd HH:mm:ss");
-
+        System.out.println(work_start_date);
+        System.out.println(Long.parseLong(timeUtil.dateTimeStamp(work_start_date,"yyyy-MM-dd HH:mm:ss")));
         list2 = reportDao.getReportById(Long.parseLong(timeUtil.dateTimeStamp(work_start_date,"yyyy-MM-dd HH:mm:ss")),contact,Integer.valueOf(depart_0),Integer.valueOf(campus_0));
         for (RReport rReport:list2)
         {   Salary salary = new Salary();
@@ -106,11 +110,14 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List getReportByContentAndCampus(String contact, String depart, String campus) {
+    public List getReportByContentAndCampus(String contact, String depart, String campus,String work_start_date) {
         List<User> list = new ArrayList<User>();
         List<Report> list1 = new  ArrayList<Report>();
         List<RReport> list2 = new  ArrayList<RReport>();
-        String work_start_date = reportDao.getStatusByName("work_start_date");
+        if (work_start_date == null ||  work_start_date.equals("")){
+            work_start_date = reportDao.getStatusByName("work_start_date");
+        }
+
         String work_end_date = reportDao.getStatusByName("work_end_date");
         work_start_date = timeUtil.dateTime(Long.parseLong(timeUtil.dateTimeStamp(work_start_date,"yyyy-MM-dd")),"yyyy-MM-dd HH:mm:ss");
 
@@ -255,7 +262,7 @@ public class ReportServiceImpl implements ReportService {
         start_date = timeUtil.dateTime(Long.parseLong(timeUtil.dateTimeStamp(start_date,"yyyy-MM-dd")),"yyyy-MM-dd HH:mm:ss");
         start_date =  timeUtil.dateTimeStamp(start_date,"yyyy-MM-dd HH:mm:ss");
 
-        long start_date_long = Long.parseLong(timeUtil.dateTimeStamp(start_date,"yyyy-MM-dd HH:mm:ss"));
+        long start_date_long = Long.parseLong(start_date);
 
 
         List<RReport>  list = reportDao.getReport(depart1,campus_0,start_date_long);
@@ -274,5 +281,16 @@ public class ReportServiceImpl implements ReportService {
 
         List<RReport>  list = reportDao.getAllReport(start_date_long);
         return list;
+    }
+
+    @Override
+    public List getReportTimes() {
+
+        List<Long> list = reportDao.getReportTimes();
+        List<String> list1 = new ArrayList<>();
+        for (Long time:list){
+            list1.add(timeUtil.dateTime(time,"yyyy-MM-dd"));
+        }
+        return list1;
     }
 }

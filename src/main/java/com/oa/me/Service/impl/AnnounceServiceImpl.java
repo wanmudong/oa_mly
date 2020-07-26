@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.oa.me.utils.timeUtil.dateTime;
 import static com.oa.me.utils.timeUtil.getSecondTimeNow;
 
 /**
@@ -34,20 +35,23 @@ public class AnnounceServiceImpl implements AnnounceService {
         List<AnnounceModel> list_model = new ArrayList<AnnounceModel>();
 
         list = announceDao.getAnnounce();
+
         for (Announce announce : list) {
+            /**
+             * 将数据库中取出的announce映射成announceModel
+             */
             AnnounceModel announceModel = new AnnounceModel();
             announceModel.setContent(announce.getContent());
             announceModel.setId(announce.getId());
             announceModel.setTitle(announce.getTitle());
             announceModel.setUid(announce.getUid());
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            long time = announce.getPublish_time();
-            //数据库存储的是注册时的时间戳，单位是s
-            Date date = new Date(time * 1000);
-            String time_model = simpleDateFormat.format(date);
-//            System.out.println(time_model);
-
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            long time = announce.getPublish_time();
+//            //数据库存储的是注册时的时间戳，单位是s
+//            Date date = new Date(time * 1000);
+//            String time_model = simpleDateFormat.format(date);
+            String time_model = dateTime(announce.getPublish_time(), "yyyy-MM-dd");
             announceModel.setTime(time_model);
 
             list_model.add(announceModel);
@@ -67,7 +71,8 @@ public class AnnounceServiceImpl implements AnnounceService {
         }
         announce.setContent(announceModel.getContent());
         announce.setStatus(1);
-//        announce.setUid(announce.getUid());
+
+        //获取当前时间作为通知的上传时间
         announce.setPublish_time(getSecondTimeNow());
 
         //获取当前用户id
@@ -76,19 +81,20 @@ public class AnnounceServiceImpl implements AnnounceService {
 
         announce.setUid(id);
 
-        Integer issuccess = announceDao.setAnnounce(announce);
+        long issuccess = announceDao.setAnnounce(announce);
 
-        return issuccess == 1 ? true : false;
+        return issuccess > 0 ? true : false;
 
 
     }
+
 
     @Override
     public boolean delAnnounce(int id) {
 
 
-        Integer issuccess = announceDao.delAnnounce(id);
+        long issuccess = announceDao.delAnnounce(id);
 
-        return issuccess == 1 ? true : false;
+        return issuccess > 0 ? true : false;
     }
 }
